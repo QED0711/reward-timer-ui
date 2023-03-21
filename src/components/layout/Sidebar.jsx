@@ -53,7 +53,7 @@ export default function Sidebar({ }) {
     return (
         <div
             ref={sidebarRef}
-            className='fixed top-0 left-0 z-5 w-screen lg:w-[33vw] h-screen py-2 pl-2 bg-indigo-200 shadow-md shadow-gray-800'
+            className='absolute top-0 left-0 w-screen lg:w-[33vw] h-screen py-2 pl-2 bg-indigo-200 shadow-md shadow-gray-800'
             style={{ transform: `translateX(${sidebarTranslation}px)` }}
         >
             <div className='absolute w-8 h-8 px-2 right-[-32px] top-4 bg-indigo-200 cursor-pointer' onClick={toggleSidebarClick}>

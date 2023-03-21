@@ -8,10 +8,10 @@ const handleCardClick = (user) => () => {
 }
 
 // SUBCOMPONENTS :::::::::::::::::::::::::::::::::::::::::::::::::::
-function CardSummarySection({ title, value }) {
+function CardSummarySection({ title, value, className }) {
     return (
-        <div className='bg-yellow-50 shadow-sm shadow-gray-500'>
-            <h4 className='text-center font-bold bg-yellow-300 text-gray-800'>{title}</h4>
+        <div className={`bg-yellow-50 shadow-sm shadow-gray-500 ${className}`}>
+            <h4 className='text-center font-bold bg-yellow-300 text-gray-800 truncate ...'>{title}</h4>
             <p className='text-center text-2xl text-gray-800'>{value}</p>
         </div>
     )
@@ -25,11 +25,13 @@ export default function UserCard({ user }) {
             onClick={handleCardClick(user)}
         >
             <h3 className='text-2xl text-indigo-800'>{user.name}</h3>
-            <div className='grid grid-cols-2 lg:grid-cols-3 gap-2'>
-                <CardSummarySection title="Points" value={user.points?.length} />
+            <div className='grid grid-cols-2 xl:grid-cols-5 gap-2'>
+                <CardSummarySection title="Points" value={user.points} className="col-span-2 xl:col-span-1" />
+                <CardSummarySection title="Tasks" value={user.tasks?.length} />
                 <CardSummarySection title="Timers" value={user.timers?.length} />
                 <CardSummarySection title="Rewards" value={user.rewards?.length} />
-            </div>
+                <CardSummarySection title="Consequences" value={user.consequences?.length} />
+          </div>
         </div>
     )
 }
