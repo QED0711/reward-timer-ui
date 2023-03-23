@@ -28,7 +28,7 @@ const _randomTimerFactory = () => {
     switch(variant) {
         case 0: // countdown: counts down for specified time
             timer.type = "countdown"
-            timer.time = randNumber({min: 60_000, max: 60_000 * 60 * 4, precision: 1000})
+            timer.time = randNumber({min: 60_000, max: 60_000 * 60 * 4, precision: 1000}) // gives total time in milliseconds
             timer.activatedAt = null;
             return timer;
         case 1: //

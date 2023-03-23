@@ -12,7 +12,7 @@ export default function UserContainer() {
     const { state } = useSpiccatoState(mainManager, ["selectedUser"]);
 
     return (
-        <div>
+        <div className="w-screen h-screen overflow-hidden">
             <Sidebar />
             {!!state.selectedUser && <UserDashboard />}
         </div>
