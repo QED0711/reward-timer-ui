@@ -5,6 +5,12 @@ const setters = {
         this.setState(prevState => {
             return {showSidebar: !prevState.showSidebar}
         })
+    },
+
+    toggleIsLocked(){
+        this.setState(prevState => {
+            return {isLocked: !prevState.isLocked};
+        })
     }
 
 }

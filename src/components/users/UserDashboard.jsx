@@ -76,7 +76,7 @@ export default function UserDashboard() {
             style={{ height: "calc(100vh - 2rem)" }}
         >
 
-            <h1 className="inline-block mr-4 text-3xl">{state.selectedUser.name}</h1>
+            <h1 className="lg:inline-block block mr-4 text-3xl">{state.selectedUser.name}</h1>
 
             {selectedSection && <DashboardNavButton title={"Dashboard"} onClick={() => { setSelectedSection(null) }} />}
 
@@ -84,9 +84,9 @@ export default function UserDashboard() {
                 
                 <DashboardSection heading="Points" className={"col-span-2 row-span-2 md:row-span-2"}>
                     <h1 className="g:text-5xl text-2xl text-center drop-shadow-md" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
-                        <button className="py-0 px-1 mx-8 text-red-500">-5</button>
+                        <button className="py-0 px-1 mx-8 text-red-500 bg-gray-700">-5</button>
                         {state.selectedUser.points}
-                        <button className="py-0 px-1 mx-8 text-green-500">+5</button>
+                        <button className="py-0 px-1 mx-8 text-green-500 bg-gray-700">+5</button>
                     </h1>
                 </DashboardSection>
 
@@ -97,7 +97,7 @@ export default function UserDashboard() {
                                 <DashboardSection 
                                     heading="Tasks" 
                                     onClick={handleSectionClick("tasks", setSelectedSection)}
-                                    className="row-span-2 md:row-span-5 col-span-2"
+                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
                                 >
                                     <ElementList elType={"task"} elements={state.selectedUser.tasks} />
                                 </DashboardSection>
@@ -105,7 +105,7 @@ export default function UserDashboard() {
                                 <DashboardSection 
                                     heading="Timers" 
                                     onClick={handleSectionClick("timers", setSelectedSection)}
-                                    className="row-span-2 md:row-span-5 col-span-2"
+                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
                                 >
                                     <ElementList elType={"timer"} elements={state.selectedUser.timers} />
                                 </DashboardSection>
@@ -113,7 +113,7 @@ export default function UserDashboard() {
                                 <DashboardSection 
                                     heading="Rewards" 
                                     onClick={handleSectionClick("rewards", setSelectedSection)}
-                                    className="row-span-2 md:row-span-5 col-span-2"
+                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
                                 >
                                     <ElementList elType={"reward"} elements={state.selectedUser.rewards} />
                                 </DashboardSection>
@@ -121,7 +121,7 @@ export default function UserDashboard() {
                                 <DashboardSection 
                                     heading="Consequences" 
                                     onClick={handleSectionClick("consequences", setSelectedSection)}
-                                    className="row-span-2 md:row-span-5 col-span-2"
+                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
                                 >
                                     <ElementList elType={"consequence"} elements={state.selectedUser.consequences} />
                                 </DashboardSection>

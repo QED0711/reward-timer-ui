@@ -10,7 +10,7 @@ const router = createBrowserRouter([
 function App() {
 
     return (
-        <div className="App w-screen h-screen bg-indigo-50  overflow-hidden">
+        <div className="App w-screen h-screen bg-indigo-50 text-gray-700  overflow-hidden">
             <RouterProvider router={router} />
         </div>
     )
