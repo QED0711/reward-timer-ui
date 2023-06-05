@@ -1,18 +1,26 @@
 
 const setters = {
 
-    toggleSidebar(){
+    toggleSidebar() {
         this.setState(prevState => {
-            return {showSidebar: !prevState.showSidebar}
+            return { showSidebar: !prevState.showSidebar }
         })
     },
 
-    toggleIsLocked(){
+    toggleIsLocked() {
         this.setState(prevState => {
-            return {isLocked: !prevState.isLocked};
+            return { isLocked: !prevState.isLocked };
         })
+    },
+    adjustSelectedUserPoints(amount) {
+        this.setState(prevState => {
+            const { selectedUser } = prevState;
+            if (!selectedUser) return {};
+
+            return { selectedUser: { ...selectedUser, points: selectedUser.points + amount } };
+
+        })
+
     }
-
 }
-
 export default setters;

@@ -13,6 +13,10 @@ const handleSectionClick = (section, setSelectedSection) => () => {
     setSelectedSection(section);
 }
 
+const adjustPoints = (amount) => () => {
+    mainManager.setters.adjustSelectedUserPoints(amount)
+}
+
 
 // EFFECTS
 const resizeBodyContainer = (bodyRef, setBodyHeight) => {
@@ -84,9 +88,9 @@ export default function UserDashboard() {
                 
                 <DashboardSection heading="Points" className={"col-span-2 row-span-2 md:row-span-2"}>
                     <h1 className="g:text-5xl text-2xl text-center drop-shadow-md" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
-                        <button className="py-0 px-1 mx-8 text-red-500 bg-gray-700">-5</button>
+                        <button className="py-0 px-1 mx-8 text-red-500" onClick={adjustPoints(-5)}>-5</button>
                         {state.selectedUser.points}
-                        <button className="py-0 px-1 mx-8 text-green-500 bg-gray-700">+5</button>
+                        <button className="py-0 px-1 mx-8 text-green-500" onClick={adjustPoints(5)}>+5</button>
                     </h1>
                 </DashboardSection>
 
@@ -119,11 +123,11 @@ export default function UserDashboard() {
                                 </DashboardSection>
 
                                 <DashboardSection 
-                                    heading="Consequences" 
-                                    onClick={handleSectionClick("consequences", setSelectedSection)}
-                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
+                                    heading="Deductions" 
+                                    onClick={handleSectionClick("deductions", setSelectedSection)}
+                                    className="row-span-2 md:row-span-5 col-span-2"
                                 >
-                                    <ElementList elType={"consequence"} elements={state.selectedUser.consequences} />
+                                    <ElementList elType={"deduction"} elements={state.selectedUser.deductions} />
                                 </DashboardSection>
                             </>
                         )
