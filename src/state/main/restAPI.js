@@ -49,7 +49,7 @@ const _randomRewardFactory = () => (
     } 
 )
 
-const _randomConsequenceFactory = () => (
+const _randomDeductionFactory = () => (
     {
         id: randUuid(),
         name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
@@ -69,7 +69,7 @@ export default {
                 tasks: Array.from({length: randNumber({min: 0, max: 10})}, _randomTaskFactory),
                 timers: Array.from({length: randNumber({min: 0, max: 5})}, _randomTimerFactory),
                 rewards: Array.from({length: randNumber({min: 0, max: 7})}, _randomRewardFactory),
-                consequences: Array.from({length: randNumber({min: 0, max: 7})}, _randomConsequenceFactory),
+                deductions: Array.from({length: randNumber({min: 0, max: 7})}, _randomDeductionFactory),
 
             }))
             this.setters.setUsers(users)

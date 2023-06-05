@@ -17,8 +17,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.9.0",
-    "spiccato": "^0.1.7",
-    "spiccato-react": "^0.0.2"
+    "spiccato": "^0.3.0",
+    "spiccato-react": "^0.1.0"
   },
   "devDependencies": {
     "@ngneat/falso": "^6.4.0",

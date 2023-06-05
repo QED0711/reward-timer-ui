@@ -30,7 +30,7 @@ export default function UserCard({ user }) {
                 <CardSummarySection title="Tasks" value={user.tasks?.length} />
                 <CardSummarySection title="Timers" value={user.timers?.length} />
                 <CardSummarySection title="Rewards" value={user.rewards?.length} />
-                <CardSummarySection title="Consequences" value={user.consequences?.length} />
+                <CardSummarySection title="Deductions" value={user.deductions?.length} />
           </div>
         </div>
     )

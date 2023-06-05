@@ -75,7 +75,7 @@ const renderListItems = (elType, elements) => {
             return elements.map(el => <ElementTypes.Timer key={el.id} timer={el} />)
         case "reward":
             return elements.map(el => <ElementTypes.Reward key={el.id} reward={el} />)
-        case "consequence":
+        case "deduction":
             return elements.map(el => <ElementTypes.Consequence key={el.id} consequence={el} />)
     }
 }
