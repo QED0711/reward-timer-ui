@@ -75,6 +75,19 @@ export default {
             this.setters.setUsers(users)
             resolve(users)
         })
+    },
+
+    getAdmins(){
+        return new Promise(resolve => {
+            // axios.get("/admins")
+            const admins = Array.from({length: 3}, () => ({
+                id: randUuid(),
+                name: randFullName(),
+                unlockCode: "123"
+            }))
+            this.setters.setAdmins(admins)
+            resolve(admins)
+        })
     }
 
 }

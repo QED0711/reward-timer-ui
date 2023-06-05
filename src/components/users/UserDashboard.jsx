@@ -125,7 +125,7 @@ export default function UserDashboard() {
                                 <DashboardSection 
                                     heading="Deductions" 
                                     onClick={handleSectionClick("deductions", setSelectedSection)}
-                                    className="row-span-2 md:row-span-5 col-span-2"
+                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
                                 >
                                     <ElementList elType={"deduction"} elements={state.selectedUser.deductions} />
                                 </DashboardSection>

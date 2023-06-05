@@ -7,7 +7,13 @@ import setters from './setters'
 import methods from './methods'
 import restAPI from './restAPI';
 
-const mainManager = new Spiccato(stateSchema, { id: "main" })
+const mainManager = new Spiccato(
+    stateSchema, 
+    { 
+        id: "main", 
+        enableWriteProtection: false 
+    }
+)
 
 mainManager.addCustomGetters(getters)
 mainManager.addCustomSetters(setters)
@@ -23,4 +29,7 @@ mainManager.connectToLocalStorage({
 
 mainManager.init();
 
+if(import.meta.env.MODE === "development") window._mainManager = mainManager;
+
 export default mainManager; 
+export const paths = mainManager.paths;

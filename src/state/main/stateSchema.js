@@ -5,6 +5,8 @@ const stateSchema = {
 
     users: [],
     selectedUser: null,
+    
+    admins: [],
 
 }
 

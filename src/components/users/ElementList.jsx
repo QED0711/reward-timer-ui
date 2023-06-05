@@ -1,9 +1,15 @@
 import { useLayoutEffect, useRef, useState } from "react"
 
+// =============================== STATE =============================== 
+import mainManager from "../../state/main/mainManager"
+
+// =============================== ICONS =============================== 
+import { RiDeleteBinFill, RiEdit2Fill } from 'react-icons/ri'
+
 // ======================================================================================
-const ListItemWrapper = ({ className, children }) => {
+const ListItemWrapper = ({ className, onClick = () => { }, children }) => {
     return (
-        <div className={`my-1 p-1 border-b-2 border-b-yellow-500 cursor-pointer hover:font-bold ${className}`}>
+        <div className={`my-1 p-1 border-b-2 border-b-yellow-500 cursor-pointer hover:font-bold ${className}`} onClick={onClick}>
             {children}
         </div>
     )
@@ -12,10 +18,18 @@ const ListItemWrapper = ({ className, children }) => {
 // ======================================================================================
 const ElementTypes = {
     Task({ task }) {
+        // EVENTS
+        const handleRowClick = () => {
+            mainManager.setters.adjustSelectedUserPoints(task.amount)
+        }
         return (
-            <ListItemWrapper className={"grid grid-cols-2"}>
+            <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
                 <div>{task.name}</div>
                 <div>+{task.amount}</div>
+                <div>
+                    <button className="mr-1">{<RiEdit2Fill className="" />}</button>
+                    <button className="mr-1">{<RiDeleteBinFill className="" />}</button>
+                </div>
             </ListItemWrapper>
         )
     },
@@ -37,7 +51,7 @@ const ElementTypes = {
                 </div>
                 <div>
                     {
-                        timer.activatedAt !== null 
+                        timer.activatedAt !== null
                             ? <></>
                             : <button>Start Now</button>
                     }
@@ -47,19 +61,27 @@ const ElementTypes = {
     },
 
     Reward({ reward }) {
+        // EVENTS
+        const handleRowClick = () => {
+            mainManager.setters.giveReward(reward)
+        }
         return (
-            <ListItemWrapper className={"grid grid-cols-2"}>
+            <ListItemWrapper className={"grid grid-cols-2"} onClick={handleRowClick}>
                 <div>{reward.name}</div>
                 <div>{reward.cost}</div>
             </ListItemWrapper>
         )
     },
-    
-    Consequence({ consequence }) {
+
+    Deduction({ deduction }) {
+        // EVENTS
+        const handleRowClick = () => {
+            mainManager.setters.adjustSelectedUserPoints(deduction.cost * -1)
+        }
         return (
-            <ListItemWrapper className={"grid grid-cols-2"}>
-                <div>{consequence.name}</div>
-                <div>-{consequence.cost}</div>
+            <ListItemWrapper className={"grid grid-cols-2"} onClick={handleRowClick}>
+                <div>{deduction.name}</div>
+                <div>-{deduction.cost}</div>
             </ListItemWrapper>
         )
     }
@@ -76,7 +98,7 @@ const renderListItems = (elType, elements) => {
         case "reward":
             return elements.map(el => <ElementTypes.Reward key={el.id} reward={el} />)
         case "deduction":
-            return elements.map(el => <ElementTypes.Consequence key={el.id} consequence={el} />)
+            return elements.map(el => <ElementTypes.Deduction key={el.id} deduction={el} />)
     }
 }
 
@@ -85,7 +107,7 @@ const setListHeight = (containerRef, setHeight) => {
     useLayoutEffect(() => {
         const parentRect = containerRef.current?.parentElement?.parentElement?.getBoundingClientRect()
         const rect = containerRef.current?.getBoundingClientRect();
-        if(!!parentRect && rect) {
+        if (!!parentRect && rect) {
             const parentHeight = parentRect.height;
             const topDiff = rect.top - parentRect.top;
             setHeight(parentHeight - topDiff)
@@ -100,7 +122,7 @@ export default function ElementList({ elType, elements }) {
     // EFFECTS
     setListHeight(containerRef, setHeight)
     return (
-        <div ref={containerRef} className="p-2 bg-yellow-200 rounded-md overflow-y-auto" style={{height}}> 
+        <div ref={containerRef} className="p-2 bg-yellow-200 rounded-md overflow-y-auto" style={{ height }}>
             {renderListItems(elType, elements)}
         </div>
     )
