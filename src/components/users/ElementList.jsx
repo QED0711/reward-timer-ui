@@ -6,6 +6,10 @@ import mainManager from "../../state/main/mainManager"
 // =============================== ICONS =============================== 
 import { RiDeleteBinFill, RiEdit2Fill } from 'react-icons/ri'
 
+// =============================== UTILS =============================== 
+import { msToDigital } from "../../utils/time"
+import Modal from "../layout/Modal"
+
 // ======================================================================================
 const ListItemWrapper = ({ className, onClick = () => { }, children }) => {
     return (
@@ -18,19 +22,37 @@ const ListItemWrapper = ({ className, onClick = () => { }, children }) => {
 // ======================================================================================
 const ElementTypes = {
     Task({ task }) {
+        // STATE
+        const [showEdit, setShowEdit] = useState(false)
+
         // EVENTS
         const handleRowClick = () => {
             mainManager.setters.adjustSelectedUserPoints(task.amount)
         }
+
+        const handleEditClick = (e) => {
+            e.stopPropagation()
+            setShowEdit(show => !show)
+        }
+
         return (
-            <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
-                <div>{task.name}</div>
-                <div>+{task.amount}</div>
-                <div>
-                    <button className="mr-1">{<RiEdit2Fill className="" />}</button>
-                    <button className="mr-1">{<RiDeleteBinFill className="" />}</button>
-                </div>
-            </ListItemWrapper>
+            <>
+                {
+                    showEdit
+                    &&
+                    <Modal closeButton onClose={() => { setShowEdit(false) }}>
+                        <div>{task.name}</div>
+                    </Modal>
+                }
+                <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
+                    <div>{task.name}</div>
+                    <div>+{task.amount}</div>
+                    <div>
+                        <button className="mr-1" onClick={handleEditClick}>{<RiEdit2Fill className="" />}</button>
+                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                    </div>
+                </ListItemWrapper>
+            </>
         )
     },
 
@@ -40,7 +62,7 @@ const ElementTypes = {
                 <div>{timer.name}</div>
                 <div>{timer.type}</div>
                 <div>
-                    {timer.type === "countdown" && timer.time}
+                    {timer.type === "countdown" && msToDigital(timer.time)}
                     {
                         timer.type === "period"
                         &&

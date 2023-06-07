@@ -8,9 +8,13 @@ import mainManager from "../../state/main/mainManager"
 import ElementList from "./ElementList"
 import SelectedSection from "./SelectedSection"
 
+// ============================ ICONS ============================ 
+import { RiAddCircleLine } from 'react-icons/ri'
+import NewEntityForm from "./NewEntityForm"
+
 // EVENTS 
-const handleSectionClick = (section, setSelectedSection) => () => {
-    setSelectedSection(section);
+const handleAddClick = (section, setSelectedSection) => () => {
+    setSelectedSection(section)
 }
 
 const adjustPoints = (amount) => () => {
@@ -46,14 +50,14 @@ const DashboardNavButton = ({ title, onClick }) => {
     )
 }
 
-const DashboardSection = ({ heading, onClick, children, className }) => {
+const DashboardSection = ({ heading, onClick = () => { }, addButton, onAddClick = () => { }, children, className }) => {
     return (
         <section className={`h-full bg-yellow-50 rounded-md shadow-sm hover:shadow-lg shadow-indigo-800 hover:shadow-indigo-900 ${className}`}>
             <h2
-                className="text-center text-2xl font-bold bg-yellow-300 cursor-pointer rounded-tl-md rounded-tr-md hover:drop-shadow-lg"
+                className="text-center text-2xl font-bold bg-yellow-300 rounded-tl-md rounded-tr-md hover:drop-shadow-lg"
                 onClick={onClick}
             >
-                {heading}
+                {heading} {addButton && <RiAddCircleLine className="inline-block cursor-pointer" onClick={onAddClick} />}
             </h2>
             <div className="w-full p-2">
                 {children}
@@ -79,13 +83,13 @@ export default function UserDashboard() {
             className="w-11/12  mx-auto mt-4 p-4 bg-indigo-300 rounded-lg shadow-lg shadow-indigo-900 overflow-hidden"
             style={{ height: "calc(100vh - 2rem)" }}
         >
-
+            {selectedSection && <NewEntityForm type={selectedSection} setSelectedSection={setSelectedSection}/>}
             <h1 className="lg:inline-block block mr-4 text-3xl">{state.selectedUser.name}</h1>
 
-            {selectedSection && <DashboardNavButton title={"Dashboard"} onClick={() => { setSelectedSection(null) }} />}
+            {/* {selectedSection && <DashboardNavButton title={"Dashboard"} onClick={() => { setSelectedSection(null) }} />} */}
 
             <div ref={bodyRef} className="grid grid-cols-2 grid-rows-[9] md:grid-rows-12 gap-4 overflow-y-auto" style={{ height: `calc(${bodyHeight}px - 0.25rem)` }}>
-                
+
                 <DashboardSection heading="Points" className={"col-span-2 row-span-2 md:row-span-2"}>
                     <h1 className="g:text-5xl text-2xl text-center drop-shadow-md" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
                         <button className="py-0 px-1 mx-8 text-red-500" onClick={adjustPoints(-5)}>-5</button>
@@ -94,47 +98,41 @@ export default function UserDashboard() {
                     </h1>
                 </DashboardSection>
 
-                {
-                    !selectedSection
-                        ? (
-                            <>
-                                <DashboardSection 
-                                    heading="Tasks" 
-                                    onClick={handleSectionClick("tasks", setSelectedSection)}
-                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
-                                >
-                                    <ElementList elType={"task"} elements={state.selectedUser.tasks} />
-                                </DashboardSection>
+                <DashboardSection
+                    heading="Tasks"
+                    addButton
+                    onAddClick={handleAddClick("task", setSelectedSection)}
+                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
+                >
+                    <ElementList elType={"task"} elements={state.selectedUser.tasks} />
+                </DashboardSection>
 
-                                <DashboardSection 
-                                    heading="Timers" 
-                                    onClick={handleSectionClick("timers", setSelectedSection)}
-                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
-                                >
-                                    <ElementList elType={"timer"} elements={state.selectedUser.timers} />
-                                </DashboardSection>
+                <DashboardSection
+                    heading="Timers"
+                    addButton
+                    onAddClick={handleAddClick("timer", setSelectedSection)}
+                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
+                >
+                    <ElementList elType={"timer"} elements={state.selectedUser.timers} />
+                </DashboardSection>
 
-                                <DashboardSection 
-                                    heading="Rewards" 
-                                    onClick={handleSectionClick("rewards", setSelectedSection)}
-                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
-                                >
-                                    <ElementList elType={"reward"} elements={state.selectedUser.rewards} />
-                                </DashboardSection>
+                <DashboardSection
+                    heading="Rewards"
+                    addButton
+                    onAddClick={handleAddClick("reward", setSelectedSection)}
+                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
+                >
+                    <ElementList elType={"reward"} elements={state.selectedUser.rewards} />
+                </DashboardSection>
 
-                                <DashboardSection 
-                                    heading="Deductions" 
-                                    onClick={handleSectionClick("deductions", setSelectedSection)}
-                                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
-                                >
-                                    <ElementList elType={"deduction"} elements={state.selectedUser.deductions} />
-                                </DashboardSection>
-                            </>
-                        )
-                        : (
-                            <SelectedSection section={selectedSection} />
-                        )
-                }
+                <DashboardSection
+                    heading="Deductions"
+                    addButton
+                    onAddClick={handleAddClick("deduction", setSelectedSection)}
+                    className="row-span-2 lg:row-span-5 col-span-2 lg:col-span-1"
+                >
+                    <ElementList elType={"deduction"} elements={state.selectedUser.deductions} />
+                </DashboardSection>
             </div>
         </div>
     )

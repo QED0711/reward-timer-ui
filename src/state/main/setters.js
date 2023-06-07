@@ -18,13 +18,13 @@ const setters = {
             if(prevState.isLocked) {
                 const isAuthorized = !!prevState.admins.find(admin => admin.unlockCode === code)
                 if(isAuthorized) {
-                    return {isLocked: false}
+                    return [{isLocked: false}, [this.paths.isLocked]]
                 } else {
                     alert("Not a valid admin password!")
-                    return {}
+                    return [{}, []]
                 }
             }
-            return { isLocked: !prevState.isLocked };
+            return [{ isLocked: !prevState.isLocked }, [this.paths.isLocked]];
         }, null, [this.paths.isLocked])
     },
 
@@ -33,7 +33,7 @@ const setters = {
             const { selectedUser } = prevState;
             if (!selectedUser || prevState.isLocked) return {};
 
-            return { selectedUser: { ...selectedUser, points: selectedUser.points + amount } };
+            return [{ selectedUser: { ...selectedUser, points: selectedUser.points + amount } }, [this.paths.selectedUser]];
 
         }, (state) => {
             this.setters._syncSelectedToUsersArray(state.selectedUser);
