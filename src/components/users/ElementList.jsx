@@ -77,7 +77,7 @@ const ElementTypes = {
                             timer.type === "period"
                             &&
                             <div>
-                                {timer.start} - {timer.end}
+                                {msToDigital(timer.start, 12)} - {msToDigital(timer.end, 12)}
                             </div>
                         }
                     </div>

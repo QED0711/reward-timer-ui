@@ -21,7 +21,7 @@ const _randomTimerFactory = () => {
     const variant = randNumber({min: 0, max: 1})
     const timer = {
         id: randUuid(),
-        name: randAlpha({length: randNumber({min: 3, max: 10})}),
+        name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
         
     }
     
@@ -33,10 +33,10 @@ const _randomTimerFactory = () => {
             return timer;
         case 1: //
             timer.type = "period";
-            timer.start = randNumber({min: 0, max: 1440, precision: 5});
-            timer.end = timer.start + randNumber({min: 10, max: 60 * 8})
+            timer.start = randNumber({min: 0, max: 8.64e+7, precision: 1000});
+            timer.end = timer.start + randNumber({min: 10*1000, max: 60 * 8 * 1000})
             timer.time = (timer.end - timer.start) * 60 * 1000
-            if (timer.end > 1440) timer.end = timer.end - 1440
+            if (timer.end > 8.64e+7) timer.end = timer.end - 8.64e+7
             return timer;
     }
 }
