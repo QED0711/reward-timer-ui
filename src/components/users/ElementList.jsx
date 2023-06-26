@@ -9,6 +9,7 @@ import { RiDeleteBinFill, RiEdit2Fill } from 'react-icons/ri'
 // =============================== UTILS =============================== 
 import { msToDigital } from "../../utils/time"
 import Modal from "../layout/Modal"
+import EditForm from "./EditForm"
 
 // ======================================================================================
 const ListItemWrapper = ({ className, onClick = () => { }, children }) => {
@@ -22,17 +23,13 @@ const ListItemWrapper = ({ className, onClick = () => { }, children }) => {
 // ======================================================================================
 const ElementTypes = {
     Task({ task }) {
+
         // STATE
-        const [showEdit, setShowEdit] = useState(false)
+        const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
         const handleRowClick = () => {
             mainManager.setters.adjustSelectedUserPoints(task.amount)
-        }
-
-        const handleEditClick = (e) => {
-            e.stopPropagation()
-            setShowEdit(show => !show)
         }
 
         return (
@@ -41,14 +38,14 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <div>{task.name}</div>
+                        <EditForm type={"task"} content={task} />
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
                     <div>{task.name}</div>
                     <div>+{task.amount}</div>
                     <div>
-                        <button className="mr-1" onClick={handleEditClick}>{<RiEdit2Fill className="" />}</button>
+                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className="mr-1" >{<RiDeleteBinFill />}</button>
                     </div>
                 </ListItemWrapper>
@@ -57,54 +54,106 @@ const ElementTypes = {
     },
 
     Timer({ timer }) {
+
+        // STATE
+        const [showEdit, setShowEdit] = useState(false);
+
         return (
-            <ListItemWrapper className={"grid grid-cols-2 lg:grid-cols-4"}>
-                <div>{timer.name}</div>
-                <div>{timer.type}</div>
-                <div>
-                    {timer.type === "countdown" && msToDigital(timer.time)}
-                    {
-                        timer.type === "period"
-                        &&
-                        <div>
-                            {timer.start} - {timer.end}
-                        </div>
-                    }
-                </div>
-                <div>
-                    {
-                        timer.activatedAt !== null
-                            ? <></>
-                            : <button>Start Now</button>
-                    }
-                </div>
-            </ListItemWrapper>
+            <>
+                {
+                    showEdit
+                    &&
+                    <Modal closeButton onClose={() => { setShowEdit(false) }}>
+                        <EditForm type={"timer"} content={timer} />
+                    </Modal>
+                }
+
+                <ListItemWrapper className={"grid grid-cols-3 lg:grid-cols-5"}>
+                    <div>{timer.name}</div>
+                    <div>{timer.type}</div>
+                    <div>
+                        {timer.type === "countdown" && msToDigital(timer.time)}
+                        {
+                            timer.type === "period"
+                            &&
+                            <div>
+                                {timer.start} - {timer.end}
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        {
+                            timer.activatedAt !== null
+                                ? <></>
+                                : <button>Start Now</button>
+                        }
+                    </div>
+                    <div>
+                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                    </div>
+                </ListItemWrapper>
+            </>
         )
     },
 
     Reward({ reward }) {
+
+        // STATE
+        const [showEdit, setShowEdit] = useState(false);
+
         // EVENTS
         const handleRowClick = () => {
             mainManager.setters.giveReward(reward)
         }
+
         return (
-            <ListItemWrapper className={"grid grid-cols-2"} onClick={handleRowClick}>
-                <div>{reward.name}</div>
-                <div>{reward.cost}</div>
-            </ListItemWrapper>
+            <>
+                {
+                    showEdit
+                    &&
+                    <Modal closeButton onClose={() => { setShowEdit(false) }}>
+                        <EditForm type={"reward"} content={reward} />
+                    </Modal>
+                }
+                <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
+                    <div>{reward.name}</div>
+                    <div>{reward.cost}</div>
+                    <div>
+                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                    </div>
+                </ListItemWrapper>
+            </>
         )
     },
 
     Deduction({ deduction }) {
+        // STATE
+        const [showEdit, setShowEdit] = useState(false);
+
         // EVENTS
         const handleRowClick = () => {
             mainManager.setters.adjustSelectedUserPoints(deduction.cost * -1)
         }
         return (
-            <ListItemWrapper className={"grid grid-cols-2"} onClick={handleRowClick}>
-                <div>{deduction.name}</div>
-                <div>-{deduction.cost}</div>
-            </ListItemWrapper>
+            <>
+                {
+                    showEdit
+                    &&
+                    <Modal closeButton onClose={() => { setShowEdit(false) }}>
+                        <EditForm type={"deduction"} content={deduction} />
+                    </Modal>
+                }
+                <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
+                    <div>{deduction.name}</div>
+                    <div>-{deduction.cost}</div>
+                    <div>
+                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                    </div>
+                </ListItemWrapper>
+            </>
         )
     }
 
