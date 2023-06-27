@@ -1,4 +1,9 @@
 import { useState } from "react"
+
+// ============================ STATE ============================ 
+import mainManager from "../../state/main/mainManager"
+
+// ============================ UTILITIES ============================ 
 import { digitalToMs, hmsToMs, msToDigital, msToHMS } from '../../utils/time'
 
 // STYLES
@@ -8,22 +13,28 @@ const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white 
 const handleUpdate = (obj, key, setter, options = { isNum: false }) => e => {
     setter(() => {
         let val;
-        if ("timeinput" in e.target.dataset) {
-            const hms = {}
-            const timeElements = [...document.querySelectorAll("[data-timeinput='true']")]
-            timeElements.forEach(el => {
-                hms[el.dataset.unit] = parseInt(el.value)
-            })
-            val = hmsToMs(hms);
-        } else if (e.target.type === "number") {
-            val = parseFloat(e.target.value)
-        } else if (e.target.type === "time") {
-            val = digitalToMs(e.target.value)
+        switch (true) {
+            case "timeinput" in e.target.dataset:
+                const hms = {}
+                const timeElements = [...document.querySelectorAll("[data-timeinput='true']")]
+                timeElements.forEach(el => {
+                    hms[el.dataset.unit] = parseInt(el.value)
+                })
+                val = hmsToMs(hms);
+                break;
+            case (e.target.type === "number"):
+                val = parseFloat(e.target.value)
+                break;
+            case e.target.type === "time":
+                val = digitalToMs(e.target.value)
+                break;
+            default:
+                val = e.target.value
         }
 
         return {
             ...obj,
-            [key]: val 
+            [key]: val
         }
     })
 }
@@ -45,10 +56,10 @@ const FormType = {
         return (
             <>
 
-                <FormLabel text={"name"}>
+                <FormLabel text={"Name"}>
                     <input className={INPUT_STYLE} type="text" value={cloned.name} onChange={handleUpdate(cloned, "name", setCloned)} />
                 </FormLabel>
-                <FormLabel text={"points"}>
+                <FormLabel text={"Points"}>
                     <input className={INPUT_STYLE} type="number" step="5" value={cloned.amount} onChange={handleUpdate(cloned, "amount", setCloned)} />
                 </FormLabel>
             </>
@@ -59,14 +70,14 @@ const FormType = {
 
         return (
             <>
-                <FormLabel text="type">
+                <FormLabel text="Type">
                     {/* <input className={INPUT_STYLE} type="text" value={cloned.name} onChange={handleUpdate(cloned, "name", setCloned)} /> */}
                     <select className={INPUT_STYLE + " cursor-pointer"} value={cloned.type} onChange={handleUpdate(cloned, "type", setCloned)}>
                         <option value="countdown">Countdown</option>
                         <option value="period">Period</option>
                     </select>
                 </FormLabel>
-                <FormLabel text="name">
+                <FormLabel text="Name">
                     <input className={INPUT_STYLE} type="text" value={cloned.name} onChange={handleUpdate(cloned, "name", setCloned)} />
                 </FormLabel>
 
@@ -74,13 +85,13 @@ const FormType = {
                     cloned.type === "countdown"
                     &&
                     <div className="grid grid-cols-3 gap-1">
-                        <FormLabel text="hours" className={"w-16"}>
+                        <FormLabel text="Hours" className={"w-16"}>
                             <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="hours" value={msToHMS(cloned.time).hours} onChange={handleUpdate(cloned, "time", setCloned)} />
                         </FormLabel>
-                        <FormLabel text="minutes" className={"w-16"}>
+                        <FormLabel text="Minutes" className={"w-16"}>
                             <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="minutes" value={msToHMS(cloned.time).minutes} onChange={handleUpdate(cloned, "time", setCloned)} />
                         </FormLabel>
-                        <FormLabel text="seconds" className={"w-16"}>
+                        <FormLabel text="Seconds" className={"w-16"}>
                             <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="seconds" value={msToHMS(cloned.time).seconds} onChange={handleUpdate(cloned, "time", setCloned)} />
                         </FormLabel>
                     </div>
@@ -89,11 +100,11 @@ const FormType = {
                     cloned.type === "period"
                     &&
                     <>
-                        <FormLabel text="start time">
-                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.start)} onChange={handleUpdate(cloned, "start", setCloned)} />
+                        <FormLabel text="Start Time">
+                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.start)} step="1" onChange={handleUpdate(cloned, "start", setCloned)} />
                         </FormLabel>
-                        <FormLabel text="end time">
-                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.end)} onChange={handleUpdate(cloned, "end", setCloned)}/>
+                        <FormLabel text="End Time">
+                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.end)} step="1" onChange={handleUpdate(cloned, "end", setCloned)} />
                         </FormLabel>
                     </>
                 }
@@ -107,10 +118,10 @@ const FormType = {
         return (
             <>
 
-                <FormLabel text={"name"}>
+                <FormLabel text={"Name"}>
                     <input className={INPUT_STYLE} type="text" value={cloned.name} onChange={handleUpdate(cloned, "name", setCloned)} />
                 </FormLabel>
-                <FormLabel text={"points"}>
+                <FormLabel text={"Cost"}>
                     <input className={INPUT_STYLE} type="number" step="5" value={cloned.cost} onChange={handleUpdate(cloned, "cost", setCloned)} />
                 </FormLabel>
             </>
@@ -121,10 +132,10 @@ const FormType = {
 
         return (
             <>
-                <FormLabel text="name">
+                <FormLabel text="Name">
                     <input className={INPUT_STYLE} type="text" value={cloned.name} onChange={handleUpdate(cloned, "name", setCloned)} />
                 </FormLabel>
-                <FormLabel text={"points"}>
+                <FormLabel text={"Points"}>
                     <input className={INPUT_STYLE} type="number" step="5" value={cloned.cost} onChange={handleUpdate(cloned, "cost", setCloned)} />
                 </FormLabel>
             </>
@@ -136,13 +147,13 @@ const FormType = {
 const renderEditType = (type, cloned, setCloned) => {
     switch (type) {
         case "task":
-            return <FormType.Task {...{cloned, setCloned}} />
+            return <FormType.Task {...{ cloned, setCloned }} />
         case "timer":
-            return <FormType.Timer {...{cloned, setCloned}} />
+            return <FormType.Timer {...{ cloned, setCloned }} />
         case "reward":
-            return <FormType.Reward {...{cloned, setCloned}} />
+            return <FormType.Reward {...{ cloned, setCloned }} />
         case "deduction":
-            return <FormType.Deduction {...{cloned, setCloned}} />
+            return <FormType.Deduction {...{ cloned, setCloned }} />
     }
 }
 export default function EditForm({ type, content, onClose }) {
@@ -152,7 +163,8 @@ export default function EditForm({ type, content, onClose }) {
     // EVENTS
     const handleSubmit = e => {
         e.preventDefault();
-        console.log(cloned)
+        console.log(cloned);
+        mainManager.setters.updateEntity(type, cloned);
         onClose();
     }
 

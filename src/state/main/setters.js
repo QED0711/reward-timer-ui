@@ -54,17 +54,53 @@ const setters = {
         })
     },
 
-    updateElement(type, update){
+    appendEntity(type, entity){
+        this.setState(prevState => {
+            const selectedUser = !!prevState.selectedUser ? {...prevState.selectedUser} : null
+            if(!selectedUser) return [{}, []];
+
+            switch(type) {
+                case "task":
+                    return [{selectedUser: {...selectedUser, tasks: [...selectedUser.tasks, entity]}}, [this.paths.selectedUser]]
+                case "timer":
+                    return [{selectedUser: {...selectedUser, timers: [...selectedUser.timers, entity]}}, [this.paths.selectedUser]]
+                case "reward":
+                    return [{selectedUser: {...selectedUser, rewards: [...selectedUser.rewards, entity]}}, [this.paths.selectedUser]]
+                case "deduction":
+                    return [{selectedUser: {...selectedUser, deductions: [...selectedUser.deductions, entity]}}, [this.paths.selectedUser]]
+            }
+        }, () => {
+            this.setters.syncSelectedUser();
+        })
+    },
+
+    updateEntity(type, update){
         this.setState(prevState => {
             switch(type){
                 case "task":
                     const tasks = prevState.selectedUser?.tasks?.map(task => task.id === update.id ? update : task)
-                    /* TODO: update users also (maybe sync them with a callback) */
-                    return {selectedUser: {...prevState.selectedUser, tasks}}, [this.paths.selectedUser, this.paths.users]
+                    return [{selectedUser: {...prevState.selectedUser, tasks}}, [this.paths.selectedUser]]
                 case "timer":
+                    const timers = prevState.selectedUser?.timers?.map(timer => timer.id === update.id ? update : timer)
+                    return [{selectedUser: {...prevState.selectedUser, timers}}, [this.paths.selectedUser]]
                 case "reward":
+                    const rewards = prevState.selectedUser?.rewards?.map(reward => reward.id === update.id ? update : reward)
+                    return [{selectedUser: {...prevState.selectedUser, rewards}}, [this.paths.selectedUser]]
                 case "deduction":
+                    const deductions = prevState.selectedUser?.deductions?.map(deduction => deduction.id === update.id ? update : deduction)
+                    return [{selectedUser: {...prevState.selectedUser, deductions}}, [this.paths.selectedUser]]
             }
+        }, () => {
+            this.setters.syncSelectedUser()
+        })
+    }, 
+
+    syncSelectedUser(){
+        this.setState(prevState => {
+            // const selectedUser = {...(prevState.selectedUser ?? {})};
+            const selectedUser = JSON.parse(JSON.stringify(prevState.selectedUser ?? {}));
+            const users = prevState.users.map(user => user.id === selectedUser.id ? selectedUser : user);
+            return [{users}, [this.paths.users]];
         })
     }
 }
