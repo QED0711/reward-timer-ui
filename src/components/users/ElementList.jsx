@@ -38,7 +38,7 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"task"} content={task} />
+                        <EditForm type={"task"} content={task} onClose={() => setShowEdit(false)} />
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
@@ -64,7 +64,7 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"timer"} content={timer} />
+                        <EditForm type={"timer"} content={timer} onClose={() => setShowEdit(false)}/>
                     </Modal>
                 }
 
@@ -113,7 +113,7 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"reward"} content={reward} />
+                        <EditForm type={"reward"} content={reward} onClose={() => setShowEdit(false)}/>
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
@@ -142,7 +142,7 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"deduction"} content={deduction} />
+                        <EditForm type={"deduction"} content={deduction} onClose={() => setShowEdit(false)}/>
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>

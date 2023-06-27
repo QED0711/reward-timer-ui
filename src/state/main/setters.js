@@ -52,6 +52,20 @@ const setters = {
         }, (state) => {
             this.setters._syncSelectedToUsersArray(state.selectedUser);
         })
+    },
+
+    updateElement(type, update){
+        this.setState(prevState => {
+            switch(type){
+                case "task":
+                    const tasks = prevState.selectedUser?.tasks?.map(task => task.id === update.id ? update : task)
+                    /* TODO: update users also (maybe sync them with a callback) */
+                    return {selectedUser: {...prevState.selectedUser, tasks}}, [this.paths.selectedUser, this.paths.users]
+                case "timer":
+                case "reward":
+                case "deduction":
+            }
+        })
     }
 }
 export default setters;

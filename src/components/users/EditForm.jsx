@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { hmsToMs, msToDigital, msToHMS } from '../../utils/time'
+import { digitalToMs, hmsToMs, msToDigital, msToHMS } from '../../utils/time'
 
 // STYLES
 const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white text-gray-800 shadow-sm shadow-gray-800"
@@ -17,6 +17,8 @@ const handleUpdate = (obj, key, setter, options = { isNum: false }) => e => {
             val = hmsToMs(hms);
         } else if (e.target.type === "number") {
             val = parseFloat(e.target.value)
+        } else if (e.target.type === "time") {
+            val = digitalToMs(e.target.value)
         }
 
         return {
@@ -25,6 +27,7 @@ const handleUpdate = (obj, key, setter, options = { isNum: false }) => e => {
         }
     })
 }
+
 
 // COMPONENTS
 const FormLabel = ({ text, display = "block", className, children }) => {
@@ -37,9 +40,7 @@ const FormLabel = ({ text, display = "block", className, children }) => {
 }
 
 const FormType = {
-    Task({ task }) {
-        // STATE
-        const [cloned, setCloned] = useState(() => JSON.parse(JSON.stringify(task)))
+    Task({ cloned, setCloned }) {
 
         return (
             <>
@@ -54,9 +55,7 @@ const FormType = {
         )
     },
 
-    Timer({ timer }) {
-        // STATE
-        const [cloned, setCloned] = useState(() => JSON.parse(JSON.stringify(timer)))
+    Timer({ cloned, setCloned }) {
 
         return (
             <>
@@ -91,10 +90,10 @@ const FormType = {
                     &&
                     <>
                         <FormLabel text="start time">
-                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.start)} />
+                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.start)} onChange={handleUpdate(cloned, "start", setCloned)} />
                         </FormLabel>
                         <FormLabel text="end time">
-                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.end)}/>
+                            <input className={INPUT_STYLE} type="time" value={msToDigital(cloned.end)} onChange={handleUpdate(cloned, "end", setCloned)}/>
                         </FormLabel>
                     </>
                 }
@@ -103,9 +102,7 @@ const FormType = {
 
     },
 
-    Reward({ reward }) {
-        // STATE
-        const [cloned, setCloned] = useState(() => JSON.parse(JSON.stringify(reward)))
+    Reward({ cloned, setCloned }) {
 
         return (
             <>
@@ -120,9 +117,7 @@ const FormType = {
         )
     },
 
-    Deduction({ deduction }) {
-        // STATE
-        const [cloned, setCloned] = useState(() => JSON.parse(JSON.stringify(deduction)))
+    Deduction({ cloned, setCloned }) {
 
         return (
             <>
@@ -138,23 +133,33 @@ const FormType = {
 }
 
 // RENDERERS
-const renderEditType = (type, content) => {
+const renderEditType = (type, cloned, setCloned) => {
     switch (type) {
         case "task":
-            return <FormType.Task task={content} />
+            return <FormType.Task {...{cloned, setCloned}} />
         case "timer":
-            return <FormType.Timer timer={content} />
+            return <FormType.Timer {...{cloned, setCloned}} />
         case "reward":
-            return <FormType.Reward reward={content} />
+            return <FormType.Reward {...{cloned, setCloned}} />
         case "deduction":
-            return <FormType.Deduction deduction={content} />
+            return <FormType.Deduction {...{cloned, setCloned}} />
     }
 }
-export default function EditForm({ type, content }) {
+export default function EditForm({ type, content, onClose }) {
+
+    const [cloned, setCloned] = useState(() => JSON.parse(JSON.stringify(content)))
+
+    // EVENTS
+    const handleSubmit = e => {
+        e.preventDefault();
+        console.log(cloned)
+        onClose();
+    }
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <h2 className="text-center text-2xl font-bold capitalize">Edit {type}</h2>
-            {renderEditType(type, content)}
+            {renderEditType(type, cloned, setCloned)}
             <input className="block w-full mx-auto mt-4 bg-yellow-300 text-indigo-700 shadow-sm shadow-gray-800 cursor-pointer" type="submit" value="Save" />
         </form>
     )
