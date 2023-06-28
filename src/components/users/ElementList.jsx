@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react"
 import mainManager from "../../state/main/mainManager"
 
 // =============================== ICONS =============================== 
-import { RiDeleteBinFill, RiEdit2Fill } from 'react-icons/ri'
+import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill } from 'react-icons/ri'
 
 // =============================== UTILS =============================== 
 import { msToDigital } from "../../utils/time"
@@ -45,6 +45,7 @@ const ElementTypes = {
                     <div>{task.name}</div>
                     <div>+{task.amount}</div>
                     <div>
+                        <button className="mr-1" >{<RiVolumeUpFill />}</button>
                         <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className="mr-1" >{<RiDeleteBinFill />}</button>
                     </div>
@@ -68,27 +69,22 @@ const ElementTypes = {
                     </Modal>
                 }
 
-                <ListItemWrapper className={"grid grid-cols-3 lg:grid-cols-5"}>
+                <ListItemWrapper className={"grid grid-cols-3 lg:grid-cols-3 gap-2"}>
                     <div>{timer.name}</div>
-                    <div>{timer.type}</div>
-                    <div>
+                    <div className="p-1 bg-gray-100 rounded-sm">
                         {timer.type === "countdown" && msToDigital(timer.time)}
                         {
                             timer.type === "period"
                             &&
                             <div>
-                                {msToDigital(timer.start, 12)} - {msToDigital(timer.end, 12)}
+                                <span className="font-bold">start:</span> {msToDigital(timer.start, 12)}
+                                <br/>
+                                <span className="font-bold">end:</span> {msToDigital(timer.end, 12)}
                             </div>
                         }
                     </div>
                     <div>
-                        {
-                            timer.activatedAt !== null
-                                ? <></>
-                                : <button>Start Now</button>
-                        }
-                    </div>
-                    <div>
+                        <button className="mr-1" title="start timer">{<RiPlayFill />}</button>
                         <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className="mr-1" >{<RiDeleteBinFill />}</button>
                     </div>
@@ -120,6 +116,7 @@ const ElementTypes = {
                     <div>{reward.name}</div>
                     <div>{reward.cost}</div>
                     <div>
+                        <button className="mr-1" >{<RiVolumeUpFill />}</button>
                         <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className="mr-1" >{<RiDeleteBinFill />}</button>
                     </div>
@@ -149,6 +146,7 @@ const ElementTypes = {
                     <div>{deduction.name}</div>
                     <div>-{deduction.cost}</div>
                     <div>
+                        <button className="mr-1" >{<RiVolumeUpFill />}</button>
                         <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className="mr-1" >{<RiDeleteBinFill />}</button>
                     </div>

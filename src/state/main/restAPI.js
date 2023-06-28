@@ -2,6 +2,7 @@ import {
     randFullName, 
     randNumber, 
     randUuid, 
+    randPhrase,
     randJobDescriptor,
     randVerb,
     randAlpha
@@ -13,7 +14,8 @@ const _randomTaskFactory = () => (
     {
         id: randUuid(),
         name: randVerb(),
-        amount: randNumber({min: 10, max: 100, precision: 5})
+        amount: randNumber({min: 10, max: 100, precision: 5}),
+        description: randPhrase({length: 1})[0],
     }
 )
 
@@ -22,7 +24,7 @@ const _randomTimerFactory = () => {
     const timer = {
         id: randUuid(),
         name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
-        
+        description: randPhrase({length: 1})[0],
     }
     
     switch(variant) {
@@ -45,7 +47,8 @@ const _randomRewardFactory = () => (
     {
         id: randUuid(),
         name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
-        cost: randNumber({min: 10, max: 500, precision: 10})
+        cost: randNumber({min: 10, max: 500, precision: 10}),
+        description: randPhrase({length: 1})[0],
     } 
 )
 
@@ -53,7 +56,8 @@ const _randomDeductionFactory = () => (
     {
         id: randUuid(),
         name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
-        cost: randNumber({min: 10, max: 500, precision: 10})
+        cost: randNumber({min: 10, max: 500, precision: 10}),
+        description: randPhrase({length: 1})[0],
     } 
 )
 
