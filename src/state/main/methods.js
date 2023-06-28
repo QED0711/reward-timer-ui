@@ -2,6 +2,10 @@ import axios from "axios"
 
 export default {
 
-    // your methods here...
-
+    speak(message){
+        if(this.state.speechSupported && !!message){
+            const speaker = new SpeechSynthesisUtterance(message);
+            speechSynthesis.speak(speaker);
+        }
+    }
 }

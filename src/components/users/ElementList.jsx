@@ -10,7 +10,21 @@ import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill } from 'react-
 import { msToDigital } from "../../utils/time"
 import Modal from "../layout/Modal"
 import EditForm from "./EditForm"
+import { useSpiccatoState } from "spiccato-react"
 
+// STYLES
+const ICON_BUTTON_STYLE = "mr-1 disabled:opacity-60 disabled:cursor-not-allowed"
+
+// EVENTS
+const handleDeleteClick = (type, entity) => e => {
+    e.stopPropagation();
+    mainManager.setters.deleteEntity(type, entity);
+}
+
+const handleSpeakClick = (entity) => e => {
+    e.stopPropagation();
+    mainManager.methods.speak(entity.description)
+}
 // ======================================================================================
 const ListItemWrapper = ({ className, onClick = () => { }, children }) => {
     return (
@@ -25,6 +39,7 @@ const ElementTypes = {
     Task({ task }) {
 
         // STATE
+        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
@@ -45,9 +60,9 @@ const ElementTypes = {
                     <div>{task.name}</div>
                     <div>+{task.amount}</div>
                     <div>
-                        <button className="mr-1" >{<RiVolumeUpFill />}</button>
-                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
-                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={!mainManager.state.speechSupported} onClick={handleSpeakClick(task)} >{<RiVolumeUpFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("task", task)} >{<RiDeleteBinFill  />}</button>
                     </div>
                 </ListItemWrapper>
             </>
@@ -57,6 +72,7 @@ const ElementTypes = {
     Timer({ timer }) {
 
         // STATE
+        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         return (
@@ -84,9 +100,9 @@ const ElementTypes = {
                         }
                     </div>
                     <div>
-                        <button className="mr-1" title="start timer">{<RiPlayFill />}</button>
-                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
-                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} title="start timer" >{<RiPlayFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("timer", timer)} >{<RiDeleteBinFill />}</button>
                     </div>
                 </ListItemWrapper>
             </>
@@ -96,6 +112,7 @@ const ElementTypes = {
     Reward({ reward }) {
 
         // STATE
+        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
@@ -116,9 +133,9 @@ const ElementTypes = {
                     <div>{reward.name}</div>
                     <div>{reward.cost}</div>
                     <div>
-                        <button className="mr-1" >{<RiVolumeUpFill />}</button>
-                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
-                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={!mainManager.state.speechSupported} onClick={handleSpeakClick(reward)}>{<RiVolumeUpFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("reward", reward)} >{<RiDeleteBinFill />}</button>
                     </div>
                 </ListItemWrapper>
             </>
@@ -127,6 +144,7 @@ const ElementTypes = {
 
     Deduction({ deduction }) {
         // STATE
+        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
@@ -146,9 +164,9 @@ const ElementTypes = {
                     <div>{deduction.name}</div>
                     <div>-{deduction.cost}</div>
                     <div>
-                        <button className="mr-1" >{<RiVolumeUpFill />}</button>
-                        <button className="mr-1" onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
-                        <button className="mr-1" >{<RiDeleteBinFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={!mainManager.state.speechSupported} onClick={handleSpeakClick(deduction)}>{<RiVolumeUpFill />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("deduction", deduction)} >{<RiDeleteBinFill  />}</button>
                     </div>
                 </ListItemWrapper>
             </>

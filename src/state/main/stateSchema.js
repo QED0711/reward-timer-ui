@@ -8,6 +8,8 @@ const stateSchema = {
     
     admins: [],
 
+    speechSupported: 'speechSynthesis' in window,
+
 }
 
 export default stateSchema;

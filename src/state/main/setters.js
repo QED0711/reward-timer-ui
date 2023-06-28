@@ -95,6 +95,27 @@ const setters = {
         })
     }, 
 
+    deleteEntity(type, entity) {
+        this.setState(prevState => {
+            switch(type){
+                case "task":
+                    const tasks = prevState.selectedUser?.tasks?.filter(task => task.id !== entity.id);
+                    return [{selectedUser: {...prevState.selectedUser, tasks}}, [this.paths.selectedUser]];
+                case "timer":
+                    const timers = prevState.selectedUser?.timers?.filter(timer => timer.id !== entity.id);
+                    return [{selectedUser: {...prevState.selectedUser, timers}}, [this.paths.selectedUser]];
+                case "reward":
+                    const rewards = prevState.selectedUser?.rewards?.filter(reward => reward.id !== entity.id);
+                    return [{selectedUser: {...prevState.selectedUser, rewards}}, [this.paths.selectedUser]];
+                case "deduction":
+                    const deductions = prevState.selectedUser?.deductions?.filter(deduction => deduction.id !== entity.id);
+                    return [{selectedUser: {...prevState.selectedUser, deductions}}, [this.paths.selectedUser]];
+            }
+        }, () => {
+            this.setters.syncSelectedUser();
+        })
+    },
+
     syncSelectedUser(){
         this.setState(prevState => {
             // const selectedUser = {...(prevState.selectedUser ?? {})};
