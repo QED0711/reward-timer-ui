@@ -7,7 +7,7 @@ import mainManager from "../../state/main/mainManager"
 import { digitalToMs, hmsToMs, msToDigital, msToHMS } from '../../utils/time'
 
 // STYLES
-const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white text-gray-800 shadow-sm shadow-gray-800"
+const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white text-gray-800 shadow-sm shadow-gray-800 resize-none"
 
 // EVENTS
 const handleUpdate = (obj, key, setter, options = { isNum: false }) => e => {
@@ -172,6 +172,10 @@ export default function EditForm({ type, content, onClose }) {
         <form onSubmit={handleSubmit}>
             <h2 className="text-center text-2xl font-bold capitalize">Edit {type}</h2>
             {renderEditType(type, cloned, setCloned)}
+
+            <FormLabel text={"Description (optional)"}>
+                <textarea className={INPUT_STYLE + " h-32"} value={cloned.description} onChange={handleUpdate(cloned, "description", setCloned)} ></textarea>
+            </FormLabel>
             <input className="block w-full mx-auto mt-4 bg-yellow-300 text-indigo-700 shadow-sm shadow-gray-800 cursor-pointer" type="submit" value="Save" />
         </form>
     )

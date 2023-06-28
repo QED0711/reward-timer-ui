@@ -12,7 +12,7 @@ import Modal from "../layout/Modal";
 import { digitalToMs, hmsToMs } from "../../utils/time";
 
 // =============================== STYLES =============================== 
-const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white shadow-sm shadow-gray-800"
+const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white shadow-sm shadow-gray-800 resize-none"
 
 // =============================== SUB-COMPONENTS =============================== 
 const Forms = {
@@ -149,12 +149,16 @@ export default function NewEntityForm({ type, setSelectedSection }) {
             containerStyle="bg-indigo-100"
         >
             <form onSubmit={handleSubmit}>
-                <h2 className="text-center text-2xl font-bold capitalize">New {type}</h2>
+                <h2 className="text-center text-2xl font-bold text-gray-800 capitalize">New {type}</h2>
                 <label>
                     <sub className="block relative top-2 mx-2 text-sm">Name</sub>
                     <input className={INPUT_STYLE} type="text" data-field="name" autoFocus required />
                 </label>
                 {renderFormContents(type)}
+                <label>
+                    <sub className="block relative top-2 mx-2 text-sm">Description (optional)</sub>
+                    <textarea className={INPUT_STYLE + " h-32"} data-field="description"></textarea>
+                </label>
 
                 <input className="block w-full mx-auto mt-4 bg-yellow-300 text-indigo-700 shadow-sm shadow-gray-800 cursor-pointer" type="submit" value="Create" />
             </form>
