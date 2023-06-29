@@ -14,13 +14,13 @@ const setters = {
     },
 
     toggleIsLocked(code) {
-        this.setState(prevState => {
+        return this.setState(prevState => {
             if(prevState.isLocked) {
                 const isAuthorized = !!prevState.admins.find(admin => admin.unlockCode === code)
                 if(isAuthorized) {
                     return [{isLocked: false}, [this.paths.isLocked]]
                 } else {
-                    alert("Not a valid admin password!")
+                    // alert("Not a valid admin password!")
                     return [{}, []]
                 }
             }
