@@ -43,4 +43,28 @@ export default [
         }
     },
 
+    {
+        method: "get",
+        path: "/admins",
+        async callback(req, res) {
+            res.send(db.data.admins);
+        }
+    },
+
+    {
+        method: "post",
+        path: "/admin",
+        async callback(req, res) {
+            const admin = req.body;
+            const existingAdmin = db.data.admins.find(a => a.name === admin.name);
+            if(existingAdmin) {
+                existingAdmin.unlockCode = admin.unlockCode;
+            } else {
+                admin.id = nanoid();
+                db.data.admins.push(admin);
+            }
+            await db.write();
+            res.send(db.data.admins.find(a => a.name === admin.name));
+        }
+    }
 ]

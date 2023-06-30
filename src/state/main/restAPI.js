@@ -1,3 +1,5 @@
+import { API_BASE } from "../../config/parsedConfig";
+import axios from "axios";
 import {
     randFullName, 
     randNumber, 
@@ -65,32 +67,108 @@ export default {
 
     getUsers(){
         return new Promise(resolve => {
-            // axios.get("/users")
-            const users = Array.from({length:20}, () => ({
-                id: randUuid(),
-                name: randFullName(), 
-                points: randNumber({min: -10_000, max: 10_000, precision: 100}),
-                tasks: Array.from({length: randNumber({min: 0, max: 10})}, _randomTaskFactory),
-                timers: Array.from({length: randNumber({min: 0, max: 5})}, _randomTimerFactory),
-                rewards: Array.from({length: randNumber({min: 0, max: 7})}, _randomRewardFactory),
-                deductions: Array.from({length: randNumber({min: 0, max: 7})}, _randomDeductionFactory),
+            axios.get(API_BASE + "/users")
+                .then(response => {
+                    if(response.status === 200){
+                        this.setters.setUsers(response.data);
+                    }
+                    resolve(response.data)
+                })
+                .catch(err => {
+                    console.error(err)
+                    this.setters.setUsers([])
+                    resolve([])
+                })
+            // const users = Array.from({length:20}, () => ({
+            //     id: randUuid(),
+            //     name: randFullName(), 
+            //     points: randNumber({min: -10_000, max: 10_000, precision: 100}),
+            //     tasks: Array.from({length: randNumber({min: 0, max: 10})}, _randomTaskFactory),
+            //     timers: Array.from({length: randNumber({min: 0, max: 5})}, _randomTimerFactory),
+            //     rewards: Array.from({length: randNumber({min: 0, max: 7})}, _randomRewardFactory),
+            //     deductions: Array.from({length: randNumber({min: 0, max: 7})}, _randomDeductionFactory),
 
-            }))
-            this.setters.setUsers(users)
-            resolve(users)
+            // }))
+            // this.setters.setUsers(users)
+            // resolve(users)
+        })
+    },
+
+    createUser(user){
+        return new Promise(resolve => {
+            axios.post(API_BASE + "/user", user)
+                .then(response => {
+                    if(response.status === 200){
+                        this.restAPI.getUsers();
+                        resolve(response.data)
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    resolve(null);
+                })
+        })
+    },
+
+    updateUser(user){
+        return new Promise(resolve => {
+            axios.put(API_BASE + "/user", user)
+                .then(response => {
+                    if(response.status === 200){
+                        this.restAPI.getUsers();
+                        resolve(response.data)
+                    } else {
+                        resolve(null)
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    resolve(null)
+                })
         })
     },
 
     getAdmins(){
         return new Promise(resolve => {
-            // axios.get("/admins")
-            const admins = Array.from({length: 3}, () => ({
-                id: randUuid(),
-                name: randFullName(),
-                unlockCode: "123"
-            }))
-            this.setters.setAdmins(admins)
-            resolve(admins)
+            axios.get(API_BASE + "/admins")
+                .then(response => {
+                    if(response.status === 200) {
+                        this.setters.setAdmins(response.data);
+                        resolve(response.data);
+                    } else {
+                        this.setters.setAdmins([]);
+                        resolve([])
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.setters.setAdmins([]);
+                    resolve([])
+                })
+        //     const admins = Array.from({length: 3}, () => ({
+        //         id: randUuid(),
+        //         name: randFullName(),
+        //         unlockCode: "123"
+        //     }))
+        //     this.setters.setAdmins(admins)
+        //     resolve(admins)
+        })
+    },
+
+    createAdmin(admin) {
+        return new Promise(resolve => {
+            axios.post(API_BASE + "/admin", admin)
+                .then(response => {
+                    if(response.status === 200) {
+                        this.restAPI.getAdmins();
+                        resolve(response.data)
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.restAPI.getAdmins();
+                    resolve([])
+                })
         })
     }
 

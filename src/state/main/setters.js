@@ -1,12 +1,5 @@
 const setters = {
 
-    _syncSelectedToUsersArray(selectedUser){
-        this.setState(prevState => {
-            const users = [...prevState.users].map(user => user.id === selectedUser.id ? selectedUser : user);
-            return {users}
-        }, null, [this.paths.users])
-    },
-
     toggleSidebar() {
         this.setState(prevState => {
             return { showSidebar: !prevState.showSidebar }
@@ -35,8 +28,8 @@ const setters = {
 
             return [{ selectedUser: { ...selectedUser, points: selectedUser.points + amount } }, [this.paths.selectedUser]];
 
-        }, (state) => {
-            this.setters._syncSelectedToUsersArray(state.selectedUser);
+        }, () => {
+            this.methods.syncSelectedUser();
         })
     }, 
     
@@ -49,8 +42,8 @@ const setters = {
                 return {}
             }
             return {selectedUser: {...selectedUser, points: selectedUser.points - reward.cost}};
-        }, (state) => {
-            this.setters._syncSelectedToUsersArray(state.selectedUser);
+        }, () => {
+            this.methods.syncSelectedUser()
         })
     },
 
@@ -70,7 +63,7 @@ const setters = {
                     return [{selectedUser: {...selectedUser, deductions: [...selectedUser.deductions, entity]}}, [this.paths.selectedUser]]
             }
         }, () => {
-            this.setters.syncSelectedUser();
+            this.methods.syncSelectedUser();
         })
     },
 
@@ -91,7 +84,7 @@ const setters = {
                     return [{selectedUser: {...prevState.selectedUser, deductions}}, [this.paths.selectedUser]]
             }
         }, () => {
-            this.setters.syncSelectedUser()
+            this.methods.syncSelectedUser()
         })
     }, 
 
@@ -112,17 +105,9 @@ const setters = {
                     return [{selectedUser: {...prevState.selectedUser, deductions}}, [this.paths.selectedUser]];
             }
         }, () => {
-            this.setters.syncSelectedUser();
+            this.methods.syncSelectedUser();
         })
     },
 
-    syncSelectedUser(){
-        this.setState(prevState => {
-            // const selectedUser = {...(prevState.selectedUser ?? {})};
-            const selectedUser = JSON.parse(JSON.stringify(prevState.selectedUser ?? {}));
-            const users = prevState.users.map(user => user.id === selectedUser.id ? selectedUser : user);
-            return [{users}, [this.paths.users]];
-        })
-    }
 }
 export default setters;

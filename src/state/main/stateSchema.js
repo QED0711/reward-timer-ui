@@ -1,7 +1,7 @@
 
 const stateSchema = {
     showSidebar: true,
-    isLocked: false,
+    isLocked: true,
 
     users: [],
     selectedUser: null,

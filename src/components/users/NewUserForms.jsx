@@ -1,3 +1,6 @@
+// ========================== STATE ========================== 
+import mainManager from "../../state/main/mainManager"
+
 // STYLES
 const INPUT_STYLE = "form-input inline-block w-full m-2 p-1 rounded-sm bg-white text-gray-800 shadow-sm shadow-gray-800 resize-none"
 
@@ -27,7 +30,7 @@ export default {
                 deductions: []
             }
 
-            console.log(user)
+            mainManager.restAPI.createUser(user);
             onClose();
         }
 
@@ -51,7 +54,7 @@ export default {
             for(let input of inputs) {
                 admin[input.dataset.field] = input.value;
             }
-            console.log(admin);
+            mainManager.restAPI.createAdmin(admin);
             onClose();
         }
         
