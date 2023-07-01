@@ -128,6 +128,20 @@ export default {
         })
     },
 
+    deleteUser(user){
+        return new Promise(resolve => {
+            axios.delete(API_BASE + "/user", {data: {id: user.id}})
+                .then(response => {
+                    this.restAPI.getUsers();
+                    resolve(user.id)
+                })
+                .catch(err => {
+                    console.error(err);
+                    resolve(null);
+                })
+        })
+    },
+
     getAdmins(){
         return new Promise(resolve => {
             axios.get(API_BASE + "/admins")

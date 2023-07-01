@@ -1,6 +1,9 @@
 
 const stateSchema = {
     socket: null, 
+    timeSyncConstant: 0,
+    serverTimezone: "",
+
     showSidebar: true,
     isLocked: true,
 

@@ -1,4 +1,16 @@
 const setters = {
+    setUsers(users) { // OVERRIDE
+        this.setState({users}, () => {this.methods.syncUsersUpdate()})
+    },
+
+    syncToServerTime(timeData){
+        this.setState(prevState => {
+            return [
+                {timeSyncConstant: timeData.time, serverTimezone: timeData.timezone},
+                [this.paths.timeSyncConstant, this.paths.serverTimezone]
+            ]
+        })
+    },
 
     toggleSidebar() {
         this.setState(prevState => {

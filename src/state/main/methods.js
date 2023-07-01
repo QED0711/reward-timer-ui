@@ -8,6 +8,16 @@ export default {
         }
     },
 
+    syncUsersUpdate(){
+        if(!this.selectedUser) return;
+        for(let user of this.state.users){
+            if (user.id === this.selectedUser.id) {
+                this.setters.setSelectedUser({...JSON.parse(JSON.stringify(user))});
+                return;
+            }
+        }
+    },
+
     speak(message){
         if(this.state.speechSupported && !!message){
             const speaker = new SpeechSynthesisUtterance(message);

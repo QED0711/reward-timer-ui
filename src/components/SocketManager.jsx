@@ -8,9 +8,12 @@ export default function SocketManager(){
         const socket = io(API_BASE);
         mainManager.setters.setSocket(socket)
 
-        socket.on("test", (data) => {
-            debugger
-            console.log(data)
+        socket.on("usersUpdated", (data) => {
+            mainManager.setters.setUsers(data.users)
+        })
+
+        socket.on("serverTime", (data) => {
+            mainManager.setters.syncToServerTime(data)
         })
     }, [])
 
