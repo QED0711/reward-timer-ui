@@ -27,9 +27,13 @@ for (let route of routes) {
 }
 
 io.on('connection', socket => {
-    // io.emit("test", { message: "Hello world" })
-    console.log("CONNECTION")
+    console.log("=== NEW CONNECTION ===");
+    // io.to(socket.id).emit("serverTime", {time: Date.now()})
+    io.emit("serverTime", {time: Date.now(), timezone: Intl.DateTimeFormat().resolvedOptions().timeZone});
 })
+
+
+
 
 
 const port = 8000

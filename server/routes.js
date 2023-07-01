@@ -7,7 +7,6 @@ export default [
         method: "get",
         path: "/users",
         callback(req, res) {
-            io.emit("test", {message: "Hello world"})
             res.send(db.data.users)
         }
     },
@@ -21,6 +20,7 @@ export default [
             db.data.users.push(req.body);
             await db.write()
             res.send(newUser);
+            io.emit("usersUpdated", {users: db.data.users})
         }
     },
 
@@ -32,6 +32,7 @@ export default [
             db.data.users = db.data.users.map(user => user.id !== update.id ? user : update)
             await db.write()
             res.send(update);
+            io.emit("usersUpdated", {users: db.data.users})
         }
     },
 
@@ -39,9 +40,11 @@ export default [
         method: "delete",
         path: "/user",
         async callback(req, res) {
+            console.log("DELETE CALLED", req.body)
             db.data.users = db.data.users.filter(user => user.id !== req.body.id)
             await db.write()
             res.send(req.body.id);
+            io.emit("usersUpdated", {users: db.data.users})
         }
     },
 
