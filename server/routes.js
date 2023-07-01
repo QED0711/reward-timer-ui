@@ -1,11 +1,13 @@
 import { nanoid } from 'nanoid';
 import db from './db/db.js'
+import { io } from './index.js';
 
 export default [
     {
         method: "get",
         path: "/users",
         callback(req, res) {
+            io.emit("test", {message: "Hello world"})
             res.send(db.data.users)
         }
     },
@@ -57,7 +59,7 @@ export default [
         async callback(req, res) {
             const admin = req.body;
             const existingAdmin = db.data.admins.find(a => a.name === admin.name);
-            if(existingAdmin) {
+            if (existingAdmin) {
                 existingAdmin.unlockCode = admin.unlockCode;
             } else {
                 admin.id = nanoid();

@@ -1,5 +1,6 @@
 
 const stateSchema = {
+    socket: null, 
     showSidebar: true,
     isLocked: true,
 
