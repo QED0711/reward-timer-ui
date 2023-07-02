@@ -5,7 +5,7 @@ const stateSchema = {
     serverTimezone: "",
 
     showSidebar: true,
-    isLocked: true,
+    isLocked: false,
 
     users: [],
     selectedUser: null,

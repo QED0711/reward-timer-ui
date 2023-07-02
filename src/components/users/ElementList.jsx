@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 // =============================== STATE =============================== 
 import mainManager from "../../state/main/mainManager"
@@ -7,7 +7,7 @@ import mainManager from "../../state/main/mainManager"
 import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, RiFullscreenLine } from 'react-icons/ri'
 
 // =============================== UTILS =============================== 
-import { msToDigital } from "../../utils/time"
+import { msToDigital, msToHMS } from "../../utils/time"
 import Modal from "../layout/Modal"
 import EditForm from "./EditForm"
 import { useSpiccatoState } from "spiccato-react"
@@ -39,7 +39,7 @@ const ElementTypes = {
     Task({ task }) {
 
         // STATE
-        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
+        const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
@@ -62,7 +62,7 @@ const ElementTypes = {
                     <div>
                         <button className={ICON_BUTTON_STYLE} disabled={!mainManager.state.speechSupported} onClick={handleSpeakClick(task)} >{<RiVolumeUpFill />}</button>
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
-                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("task", task)} >{<RiDeleteBinFill  />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("task", task)} >{<RiDeleteBinFill />}</button>
                     </div>
                 </ListItemWrapper>
             </>
@@ -72,15 +72,46 @@ const ElementTypes = {
     Timer({ timer }) {
 
         // STATE
-        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked, mainManager.paths.serverTimezone])
+        const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked, mainManager.paths.serverTimezone])
         const [isActive, setIsActive] = useState(false);
         const [showEdit, setShowEdit] = useState(false);
+        const [timeRemaining, setTimeRemaining] = useState(null)
+        const [percentageComplete, setPercentageComplete] = useState(0);
 
         // EVENTS
-        const handleStartCountdownClick = e => {
+        const handleToggleStartCountdown = e => {
             e.preventDefault();
-            mainManager.restAPI.startCountdown(timer.id);
+            !!timer.startedAt
+                ? mainManager.restAPI.stopCountdown(timer.id)
+                : mainManager.restAPI.startCountdown(timer.id)
         }
+
+        // EFFECTS
+        // Handle start/stopping of countdown timer
+        useEffect(() => {
+            if (timer.type === "countdown") {
+                if (!!timer.startedAt) {
+                    window[timer.id + "_interval"] = setInterval(() => {
+                        const timeSyncConstant = mainManager.getters.getTimeSyncConstant();
+                        const now = Date.now()
+                        const remaining = timer.time - (now - timeSyncConstant - timer.startedAt)
+                        if (remaining <= 0) {
+                            clearInterval(window[timer.id + "_interval"])
+                            mainManager.restAPI.stopCountdown(timer.id);
+                            setTimeRemaining(null)
+                            setPercentageComplete(0)
+                        } else {
+                            setTimeRemaining(remaining);
+                            setPercentageComplete(Math.min(1 - (remaining / timer.time), 1));
+                        }
+                    }, 250)
+                    setIsActive(true)
+                } else {
+                    clearInterval(window[timer.id + "_interval"]);
+                    setIsActive(false)
+                }
+            }
+        }, [timer.startedAt])
 
         return (
             <>
@@ -88,38 +119,51 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"timer"} content={timer} onClose={() => setShowEdit(false)}/>
+                        <EditForm type={"timer"} content={timer} onClose={() => setShowEdit(false)} />
                     </Modal>
                 }
 
                 <ListItemWrapper className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"}>
                     <div>{timer.name}</div>
-                    <div className="p-1 bg-gray-100 rounded-sm">
-                        {timer.type === "countdown" && msToDigital(timer.time)}
-                        {
+                    <div className="relative p-1 bg-gray-100 rounded-sm">
+                        { // COUNTDOWN
+                            timer.type === "countdown"
+                            &&
+                            msToDigital(isActive ? timeRemaining : timer.time)
+                        }
+
+                        { // PERIOD
                             timer.type === "period"
                             &&
                             <div className="relative pt-3">
                                 <sub className="absolute top-1 font-sm italic">{state.serverTimezone.replace(/_/g, " ")}</sub>
                                 <span className="font-bold">start:</span> {msToDigital(timer.start, 12)}
-                                <br/>
+                                <br />
                                 <span className="font-bold">end:</span> {msToDigital(timer.end, 12)}
                             </div>
+                        }
+                        {
+                            isActive
+                            &&
+                            <>
+                                <div className="absolute top-0 left-0 h-full bg-green-400 opacity-50" style={{ width: `${percentageComplete * 100}%` }}></div>
+                                <div className="absolute top-0 right-0 h-full bg-red-400 opacity-50" style={{ width: `${(1 - percentageComplete) * 100}%` }}></div>
+                            </>
                         }
                     </div>
                     <div className="row-span-1 md:row-span-2">
                         <button className={ICON_BUTTON_STYLE} disabled={!isActive} title="start timer" >{<RiFullscreenLine />}</button>
                         {
-                            timer.type === "countdown" 
-                            && 
-                            <button 
-                                className={ICON_BUTTON_STYLE} 
-                                disabled={state.isLocked} 
-                                title="start timer" 
-                                onClick={handleStartCountdownClick}
+                            timer.type === "countdown"
+                            &&
+                            <button
+                                className={ICON_BUTTON_STYLE}
+                                disabled={state.isLocked}
+                                title="start timer"
+                                onClick={handleToggleStartCountdown}
                             >
-                                    {!timer.startedAt ? <RiPlayFill /> : <RiStopFill />}
-                                </button>}
+                                {!timer.startedAt ? <RiPlayFill /> : <RiStopFill />}
+                            </button>}
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("timer", timer)} >{<RiDeleteBinFill />}</button>
                     </div>
@@ -131,7 +175,7 @@ const ElementTypes = {
     Reward({ reward }) {
 
         // STATE
-        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
+        const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
@@ -145,7 +189,7 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"reward"} content={reward} onClose={() => setShowEdit(false)}/>
+                        <EditForm type={"reward"} content={reward} onClose={() => setShowEdit(false)} />
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
@@ -163,7 +207,7 @@ const ElementTypes = {
 
     Deduction({ deduction }) {
         // STATE
-        const {state} = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
+        const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
         const [showEdit, setShowEdit] = useState(false);
 
         // EVENTS
@@ -176,7 +220,7 @@ const ElementTypes = {
                     showEdit
                     &&
                     <Modal closeButton onClose={() => { setShowEdit(false) }}>
-                        <EditForm type={"deduction"} content={deduction} onClose={() => setShowEdit(false)}/>
+                        <EditForm type={"deduction"} content={deduction} onClose={() => setShowEdit(false)} />
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
@@ -185,7 +229,7 @@ const ElementTypes = {
                     <div>
                         <button className={ICON_BUTTON_STYLE} disabled={!mainManager.state.speechSupported} onClick={handleSpeakClick(deduction)}>{<RiVolumeUpFill />}</button>
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
-                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("deduction", deduction)} >{<RiDeleteBinFill  />}</button>
+                        <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("deduction", deduction)} >{<RiDeleteBinFill />}</button>
                     </div>
                 </ListItemWrapper>
             </>

@@ -148,59 +148,72 @@ export default {
         return new Promise(resolve => {
             axios.post(API_BASE + "/timer/start", { userID, timerID })
                 .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                console.error(err)
-                resolve(null)
-            })
-    })
+                    resolve(response.data)
+                })
+                .catch(err => {
+                    console.error(err)
+                    resolve(null)
+                })
+        })
+    },
 
-},
+    stopCountdown(timerID) {
+        const userID = this.state.selectedUser?.id;
+        return new Promise(resolve => {
+            axios.post(API_BASE + "/timer/stop", { userID, timerID })
+                .then(response => {
+                    resolve(response.data)
+                })
+                .catch(err => {
+                    console.error(err)
+                    resolve(null)
+                })
+        })
+    },
 
-getAdmins(){
-    return new Promise(resolve => {
-        axios.get(API_BASE + "/admins")
-            .then(response => {
-                if (response.status === 200) {
-                    this.setters.setAdmins(response.data);
-                    resolve(response.data);
-                } else {
+    getAdmins() {
+        return new Promise(resolve => {
+            axios.get(API_BASE + "/admins")
+                .then(response => {
+                    if (response.status === 200) {
+                        this.setters.setAdmins(response.data);
+                        resolve(response.data);
+                    } else {
+                        this.setters.setAdmins([]);
+                        resolve([])
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
                     this.setters.setAdmins([]);
                     resolve([])
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                this.setters.setAdmins([]);
-                resolve([])
-            })
-        //     const admins = Array.from({length: 3}, () => ({
-        //         id: randUuid(),
-        //         name: randFullName(),
-        //         unlockCode: "123"
-        //     }))
-        //     this.setters.setAdmins(admins)
-        //     resolve(admins)
-    })
-},
+                })
+            //     const admins = Array.from({length: 3}, () => ({
+            //         id: randUuid(),
+            //         name: randFullName(),
+            //         unlockCode: "123"
+            //     }))
+            //     this.setters.setAdmins(admins)
+            //     resolve(admins)
+        })
+    },
 
-createAdmin(admin) {
-    return new Promise(resolve => {
-        axios.post(API_BASE + "/admin", admin)
-            .then(response => {
-                if (response.status === 200) {
+    createAdmin(admin) {
+        return new Promise(resolve => {
+            axios.post(API_BASE + "/admin", admin)
+                .then(response => {
+                    if (response.status === 200) {
+                        this.restAPI.getAdmins();
+                        resolve(response.data)
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
                     this.restAPI.getAdmins();
-                    resolve(response.data)
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                this.restAPI.getAdmins();
-                resolve([])
-            })
-    })
-}
+                    resolve([])
+                })
+        })
+    }
 
 }
 

@@ -68,6 +68,26 @@ export default [
         }
     },
 
+    {
+        method: "post",
+        path: "/timer/stop",
+        async callback(req, res) {
+            const { userID, timerID } = req.body
+            const startTime = Date.now();
+            db.data.users = db.data.users.map(user => {
+                if (user.id !== userID) return user;
+                user.timers = user.timers.map(timer => {
+                    if (timer.id !== timerID) return timer;
+                    return { ...timer, startedAt: null };
+                })
+                return user;
+            })
+            await db.write();
+            res.send({ startedAt: startTime })
+            io.emit("usersUpdated", { users: db.data.users });
+        }
+    },
+
 
     {
         method: "get",

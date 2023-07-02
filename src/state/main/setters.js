@@ -9,7 +9,7 @@ const setters = {
     syncToServerTime(timeData){
         this.setState(prevState => {
             return [
-                {timeSyncConstant: timeData.time, serverTimezone: timeData.timezone},
+                {timeSyncConstant: Date.now() - timeData.time, serverTimezone: timeData.timezone},
                 [this.paths.timeSyncConstant, this.paths.serverTimezone]
             ]
         })
