@@ -69,7 +69,7 @@ const DashboardSection = ({ heading, onClick = () => { }, addButton, onAddClick 
 export default function UserDashboard() {
 
     // STATE
-    const { state } = useSpiccatoState(mainManager, ["selectedUser"])
+    const { state } = useSpiccatoState(mainManager, [mainManager.paths.selectedUser])
     const [selectedSection, setSelectedSection] = useState(null);
     const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
     const bodyRef = useRef(null)

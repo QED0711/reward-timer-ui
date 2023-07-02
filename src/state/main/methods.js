@@ -9,9 +9,9 @@ export default {
     },
 
     syncUsersUpdate(){
-        if(!this.selectedUser) return;
+        if(!this.state.selectedUser) return;
         for(let user of this.state.users){
-            if (user.id === this.selectedUser.id) {
+            if (user.id === this.state.selectedUser.id) {
                 this.setters.setSelectedUser({...JSON.parse(JSON.stringify(user))});
                 return;
             }

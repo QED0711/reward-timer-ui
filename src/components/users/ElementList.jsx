@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react"
 import mainManager from "../../state/main/mainManager"
 
 // =============================== ICONS =============================== 
-import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiFullscreenLine } from 'react-icons/ri'
+import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, RiFullscreenLine } from 'react-icons/ri'
 
 // =============================== UTILS =============================== 
 import { msToDigital } from "../../utils/time"
@@ -76,6 +76,12 @@ const ElementTypes = {
         const [isActive, setIsActive] = useState(false);
         const [showEdit, setShowEdit] = useState(false);
 
+        // EVENTS
+        const handleStartCountdownClick = e => {
+            e.preventDefault();
+            mainManager.restAPI.startCountdown(timer.id);
+        }
+
         return (
             <>
                 {
@@ -93,8 +99,8 @@ const ElementTypes = {
                         {
                             timer.type === "period"
                             &&
-                            <div className="relative">
-                                <sub className="absolute top-1 right-1 font-sm italic">{state.serverTimezone.replace(/_/g, " ")}</sub>
+                            <div className="relative pt-3">
+                                <sub className="absolute top-1 font-sm italic">{state.serverTimezone.replace(/_/g, " ")}</sub>
                                 <span className="font-bold">start:</span> {msToDigital(timer.start, 12)}
                                 <br/>
                                 <span className="font-bold">end:</span> {msToDigital(timer.end, 12)}
@@ -103,7 +109,17 @@ const ElementTypes = {
                     </div>
                     <div className="row-span-1 md:row-span-2">
                         <button className={ICON_BUTTON_STYLE} disabled={!isActive} title="start timer" >{<RiFullscreenLine />}</button>
-                        {timer.type === "countdown" && <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} title="start timer" >{<RiPlayFill />}</button>}
+                        {
+                            timer.type === "countdown" 
+                            && 
+                            <button 
+                                className={ICON_BUTTON_STYLE} 
+                                disabled={state.isLocked} 
+                                title="start timer" 
+                                onClick={handleStartCountdownClick}
+                            >
+                                    {!timer.startedAt ? <RiPlayFill /> : <RiStopFill />}
+                                </button>}
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={handleDeleteClick("timer", timer)} >{<RiDeleteBinFill />}</button>
                     </div>

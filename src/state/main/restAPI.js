@@ -1,44 +1,44 @@
 import { API_BASE } from "../../config/parsedConfig";
 import axios from "axios";
 import {
-    randFullName, 
-    randNumber, 
-    randUuid, 
+    randFullName,
+    randNumber,
+    randUuid,
     randPhrase,
     randJobDescriptor,
     randVerb,
     randAlpha
 } from "@ngneat/falso";
 
-import {DateTime} from "luxon"
+import { DateTime } from "luxon"
 
 const _randomTaskFactory = () => (
     {
         id: randUuid(),
         name: randVerb(),
-        amount: randNumber({min: 10, max: 100, precision: 5}),
-        description: randPhrase({length: 1})[0],
+        amount: randNumber({ min: 10, max: 100, precision: 5 }),
+        description: randPhrase({ length: 1 })[0],
     }
 )
 
 const _randomTimerFactory = () => {
-    const variant = randNumber({min: 0, max: 1})
+    const variant = randNumber({ min: 0, max: 1 })
     const timer = {
         id: randUuid(),
-        name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
-        description: randPhrase({length: 1})[0],
+        name: randAlpha({ length: randNumber({ min: 3, max: 10 }) }).join(""),
+        description: randPhrase({ length: 1 })[0],
     }
-    
-    switch(variant) {
+
+    switch (variant) {
         case 0: // countdown: counts down for specified time
             timer.type = "countdown"
-            timer.time = randNumber({min: 60_000, max: 60_000 * 60 * 4, precision: 1000}) // gives total time in milliseconds
+            timer.time = randNumber({ min: 60_000, max: 60_000 * 60 * 4, precision: 1000 }) // gives total time in milliseconds
             timer.activatedAt = null;
             return timer;
         case 1: //
             timer.type = "period";
-            timer.start = randNumber({min: 0, max: 8.64e+7, precision: 1000});
-            timer.end = timer.start + randNumber({min: 10*1000, max: 60 * 8 * 1000})
+            timer.start = randNumber({ min: 0, max: 8.64e+7, precision: 1000 });
+            timer.end = timer.start + randNumber({ min: 10 * 1000, max: 60 * 8 * 1000 })
             timer.time = (timer.end - timer.start) * 60 * 1000
             if (timer.end > 8.64e+7) timer.end = timer.end - 8.64e+7
             return timer;
@@ -48,28 +48,28 @@ const _randomTimerFactory = () => {
 const _randomRewardFactory = () => (
     {
         id: randUuid(),
-        name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
-        cost: randNumber({min: 10, max: 500, precision: 10}),
-        description: randPhrase({length: 1})[0],
-    } 
+        name: randAlpha({ length: randNumber({ min: 3, max: 10 }) }).join(""),
+        cost: randNumber({ min: 10, max: 500, precision: 10 }),
+        description: randPhrase({ length: 1 })[0],
+    }
 )
 
 const _randomDeductionFactory = () => (
     {
         id: randUuid(),
-        name: randAlpha({length: randNumber({min: 3, max: 10})}).join(""),
-        cost: randNumber({min: 10, max: 500, precision: 10}),
-        description: randPhrase({length: 1})[0],
-    } 
+        name: randAlpha({ length: randNumber({ min: 3, max: 10 }) }).join(""),
+        cost: randNumber({ min: 10, max: 500, precision: 10 }),
+        description: randPhrase({ length: 1 })[0],
+    }
 )
 
 export default {
 
-    getUsers(){
+    getUsers() {
         return new Promise(resolve => {
             axios.get(API_BASE + "/users")
                 .then(response => {
-                    if(response.status === 200){
+                    if (response.status === 200) {
                         this.setters.setUsers(response.data);
                     }
                     resolve(response.data)
@@ -94,11 +94,11 @@ export default {
         })
     },
 
-    createUser(user){
+    createUser(user) {
         return new Promise(resolve => {
             axios.post(API_BASE + "/user", user)
                 .then(response => {
-                    if(response.status === 200){
+                    if (response.status === 200) {
                         this.restAPI.getUsers();
                         resolve(response.data)
                     }
@@ -110,11 +110,11 @@ export default {
         })
     },
 
-    updateUser(user){
+    updateUser(user) {
         return new Promise(resolve => {
             axios.put(API_BASE + "/user", user)
                 .then(response => {
-                    if(response.status === 200){
+                    if (response.status === 200) {
                         this.restAPI.getUsers();
                         resolve(response.data)
                     } else {
@@ -128,9 +128,9 @@ export default {
         })
     },
 
-    deleteUser(user){
+    deleteUser(user) {
         return new Promise(resolve => {
-            axios.delete(API_BASE + "/user", {data: {id: user.id}})
+            axios.delete(API_BASE + "/user", { data: { id: user.id } })
                 .then(response => {
                     this.restAPI.getUsers();
                     resolve(user.id)
@@ -142,23 +142,39 @@ export default {
         })
     },
 
-    getAdmins(){
+
+    startCountdown(timerID) {
+        const userID = this.state.selectedUser?.id;
         return new Promise(resolve => {
-            axios.get(API_BASE + "/admins")
+            axios.post(API_BASE + "/timer/start", { userID, timerID })
                 .then(response => {
-                    if(response.status === 200) {
-                        this.setters.setAdmins(response.data);
-                        resolve(response.data);
-                    } else {
-                        this.setters.setAdmins([]);
-                        resolve([])
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
+                resolve(response.data)
+            })
+            .catch(err => {
+                console.error(err)
+                resolve(null)
+            })
+    })
+
+},
+
+getAdmins(){
+    return new Promise(resolve => {
+        axios.get(API_BASE + "/admins")
+            .then(response => {
+                if (response.status === 200) {
+                    this.setters.setAdmins(response.data);
+                    resolve(response.data);
+                } else {
                     this.setters.setAdmins([]);
                     resolve([])
-                })
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.setters.setAdmins([]);
+                resolve([])
+            })
         //     const admins = Array.from({length: 3}, () => ({
         //         id: randUuid(),
         //         name: randFullName(),
@@ -166,25 +182,25 @@ export default {
         //     }))
         //     this.setters.setAdmins(admins)
         //     resolve(admins)
-        })
-    },
+    })
+},
 
-    createAdmin(admin) {
-        return new Promise(resolve => {
-            axios.post(API_BASE + "/admin", admin)
-                .then(response => {
-                    if(response.status === 200) {
-                        this.restAPI.getAdmins();
-                        resolve(response.data)
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
+createAdmin(admin) {
+    return new Promise(resolve => {
+        axios.post(API_BASE + "/admin", admin)
+            .then(response => {
+                if (response.status === 200) {
                     this.restAPI.getAdmins();
-                    resolve([])
-                })
-        })
-    }
+                    resolve(response.data)
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.restAPI.getAdmins();
+                resolve([])
+            })
+    })
+}
 
 }
 

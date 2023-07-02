@@ -1,6 +1,9 @@
 const setters = {
     setUsers(users) { // OVERRIDE
-        this.setState({users}, () => {this.methods.syncUsersUpdate()})
+        debugger
+        this.setState({users}, () => {
+            this.methods.syncUsersUpdate()
+        })
     },
 
     syncToServerTime(timeData){

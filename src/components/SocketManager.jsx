@@ -10,6 +10,7 @@ export default function SocketManager(){
 
         socket.on("usersUpdated", (data) => {
             mainManager.setters.setUsers(data.users)
+            mainManager.methods.syncUsersUpdate();
         })
 
         socket.on("serverTime", (data) => {
