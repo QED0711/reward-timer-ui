@@ -63,7 +63,7 @@ export default function LockManager() {
     }, [code])
 
     return (
-        <div className="fixed top-3 right-3 p-2 inline-block border-[3px] border-black rounded-full cursor-pointer select-none" onPointerUp={() => state.isLocked ? setShowKeypad(true) : mainManager.setters.toggleIsLocked("")}>
+        <div className="fixed top-3 right-3 p-2 inline-block border-[3px] border-black rounded-full cursor-pointer select-none z-50" onPointerUp={() => state.isLocked ? setShowKeypad(true) : mainManager.setters.toggleIsLocked("")}>
             {
                 state.isLocked
                     ? <RiLock2Fill className="w-4 h-4 lg:w-[2rem] lg:h-[2rem] text-red-500" />
