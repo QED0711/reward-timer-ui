@@ -7,7 +7,7 @@ import mainManager from "../../state/main/mainManager"
 import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, RiFullscreenLine } from 'react-icons/ri'
 
 // =============================== UTILS =============================== 
-import { msToDigital, msToHMS } from "../../utils/time"
+import { millisIntoDay, msToDigital, msToHMS } from "../../utils/time"
 import Modal from "../layout/Modal"
 import EditForm from "./EditForm"
 import { useSpiccatoState } from "spiccato-react"
@@ -112,6 +112,42 @@ const ElementTypes = {
                 }
             }
         }, [timer.startedAt])
+
+        // Handle start/stopping of period timer
+        useEffect(() => {
+            clearInterval(window[timer.id + "_period_interval"])
+            if (timer.type === "period") {
+                window[timer.id + "_period_interval"] = setInterval(() => {
+                    const currentServerTime = Date.now() - mainManager.getters.getTimeSyncConstant();
+                    const dayMS = millisIntoDay(currentServerTime);
+                    if (timer.end > timer.start) { // period contained within the day
+                        if (dayMS >= timer.start && dayMS < timer.end) {
+                            const remaining = timer.end - dayMS;
+                            setTimeRemaining(remaining)
+                            setPercentageComplete(Math.min(1 - (remaining / (timer.end - timer.start)), 1));
+                            setIsActive(true)
+                        } else {
+                            setIsActive(false)
+                            setTimeRemaining(null)
+                            setPercentageComplete(0)
+                            clearInterval(window[timer.id + "_period_interval"])
+                        }
+                    } else if (timer.end < timer.start) { // period spans overnight
+                        if (dayMS >= timer.start || dayMS < timer.end) {
+
+                            setIsActive(true)
+                        } else {
+
+                        }
+                    }
+                    if (dayMS >= timer.start)
+                        console.log({ currentServerTime, dayMS, time: msToDigital(dayMS, 12) });
+                }, 1000);
+            } else {
+                clearInterval(window[timer.id + "_period_interval"])
+            }
+
+        }, [timer.type, timer.start, timer.end])
 
         return (
             <>

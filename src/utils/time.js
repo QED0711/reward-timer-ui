@@ -44,3 +44,9 @@ export function digitalToMs(digital) {
 
     return ((hours * 60 * 60) + (minutes * 60) + seconds) * 1000;
 }
+
+export function millisIntoDay(ts) {
+    const date = new Date(ts);
+    const midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    return date.getTime() - midnight.getTime();
+}
