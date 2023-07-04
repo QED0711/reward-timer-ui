@@ -202,7 +202,7 @@ const ElementTypes = {
                             isActive
                             &&
                             <>
-                                <div className="absolute top-0 left-0 h-full bg-green-400 opacity-50" style={{ width: `${percentageComplete * 100}%` }}></div>
+                                <div className="absolute top-0 left-0 h-full bg-yellow-500 opacity-50" style={{ width: `${percentageComplete * 100}%` }}></div>
                                 <div className="absolute top-0 right-0 h-full bg-red-400 opacity-50" style={{ width: `${(1 - percentageComplete) * 100}%` }}></div>
                             </>
                         }
