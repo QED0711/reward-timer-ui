@@ -69,7 +69,7 @@ const DashboardSection = ({ heading, onClick = () => { }, addButton, onAddClick 
 export default function UserDashboard() {
 
     // STATE
-    const { state } = useSpiccatoState(mainManager, [mainManager.paths.selectedUser])
+    const { state } = useSpiccatoState(mainManager, [mainManager.paths.selectedUser, mainManager.paths.isLocked])
     const [selectedSection, setSelectedSection] = useState(null);
     const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
     const bodyRef = useRef(null)
@@ -92,9 +92,9 @@ export default function UserDashboard() {
 
                 <DashboardSection heading="Points" className={"col-span-2 row-span-2 md:row-span-2"}>
                     <h1 className="g:text-5xl text-2xl text-center drop-shadow-md" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
-                        <button className="py-0 px-1 mx-8 text-red-500" onClick={adjustPoints(-5)}>-5</button>
+                        <button className="py-0 px-1 mx-8 text-red-500 disabled:opacity-50 disabled:cursor-not-allowed" disabled={state.isLocked}  onClick={adjustPoints(-5)}>-5</button>
                         {state.selectedUser.points}
-                        <button className="py-0 px-1 mx-8 text-green-500" onClick={adjustPoints(5)}>+5</button>
+                        <button className="py-0 px-1 mx-8 text-green-500 disabled:opacity-50 disabled:cursor-not-allowed" disabled={state.isLocked} onClick={adjustPoints(5)}>+5</button>
                     </h1>
                 </DashboardSection>
 

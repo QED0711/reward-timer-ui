@@ -41,7 +41,7 @@ const toggleCollapse = (showSidebar, setSidebarTranslation, sidebarRef) => {
 export default function Sidebar({ }) {
 
     // STATE
-    const { state } = useSpiccatoState(mainManager, ["showSidebar"]);
+    const { state } = useSpiccatoState(mainManager, [mainManager.paths.showSidebar, mainManager.paths.isLocked]);
     const [searchFilter, setSearchFilter] = useState("");
     const [listHeight, setListHeight] = useState("100vh")
     const [sidebarTranslation, setSidebarTranslation] = useState(0);
@@ -73,12 +73,14 @@ export default function Sidebar({ }) {
                 <div className='w-full pr-2'>
                     <div className='grid grid-cols-2 gap-2 mb-2'>
                         <button 
-                            className='bg-indigo-100 hover:shadow-sm hover:shadow-indigo-500 text-indigo-800'
+                            className='bg-indigo-100 hover:shadow-sm hover:shadow-indigo-500 text-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed'
                             onClick={() => setShowNewUserModal(true)}
+                            disabled={state.isLocked}
                         >New User</button>
                         <button 
-                            className='bg-indigo-100 hover:shadow-sm hover:shadow-indigo-500 text-indigo-800'
+                            className='bg-indigo-100 hover:shadow-sm hover:shadow-indigo-500 text-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed'
                             onClick={() => setShowNewAdminModal(true)}
+                            disabled={state.isLocked}
                         >New Admin</button>
                     </div>
                     <input

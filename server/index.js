@@ -1,18 +1,26 @@
+import fs from 'node:fs';
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import { Server } from "socket.io";
-import http from 'node:http';
+import https from 'node:https';
 import routes from './routes.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 app.options("*", cors())
 app.use(cors())
-app.use("/", express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "dist")))
+app.use("/", express.static(path.join(__dirname, "..", "dist")))
 
-const server = http.createServer(app);
+const privateKey = fs.readFileSync(path.join(__dirname, "..", "ssl", "server.key"), 'utf8');
+const certificate = fs.readFileSync(path.join(__dirname, "..", "ssl", "server.cert"), 'utf8');
+
+const credentials = { key: privateKey, cert: certificate};
+
+const server = https.createServer(credentials, app);
 export const io = new Server(server, {
     cors: {
         origin: "*",
