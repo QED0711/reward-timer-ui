@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 // =============================== STATE =============================== 
+import { useSpiccatoState } from "spiccato-react"
 import mainManager from "../../state/main/mainManager"
 
 // =============================== COMPONENTS =============================== 
@@ -13,7 +14,7 @@ import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, R
 
 // =============================== UTILS =============================== 
 import { millisIntoDay, msToDigital, msToHMS } from "../../utils/time"
-import { useSpiccatoState } from "spiccato-react"
+import { enterFullScreen } from "../../utils/std"
 
 // STYLES
 const ICON_BUTTON_STYLE = "mr-1 mb-1 disabled:opacity-60 disabled:cursor-not-allowed"
@@ -92,6 +93,7 @@ const ElementTypes = {
 
         const handleFullScreenClick = () => {
             setShowFullScreen(true);
+            enterFullScreen();
         }
 
         // EFFECTS
