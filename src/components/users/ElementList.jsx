@@ -14,7 +14,7 @@ import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, R
 
 // =============================== UTILS =============================== 
 import { millisIntoDay, msToDigital, msToHMS } from "../../utils/time"
-import { enterFullScreen } from "../../utils/std"
+import { enterFullScreen, exitFullScreen } from "../../utils/std"
 
 // STYLES
 const ICON_BUTTON_STYLE = "mr-1 mb-1 disabled:opacity-60 disabled:cursor-not-allowed"
@@ -178,7 +178,7 @@ const ElementTypes = {
                 {
                     showFullScreen
                     &&
-                    <FullScreenTimer onClose={() => setShowFullScreen(false)} {...{timer, timeRemaining, percentageComplete}} />
+                    <FullScreenTimer onClose={() => {setShowFullScreen(false); exitFullScreen()}} {...{timer, timeRemaining, percentageComplete}} />
                 }
 
                 <ListItemWrapper className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"}>
