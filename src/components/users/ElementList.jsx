@@ -310,27 +310,10 @@ const renderListItems = (elType, elements) => {
     }
 }
 
-//EFFECTS
-const setListHeight = (containerRef, setHeight) => {
-    useLayoutEffect(() => {
-        const parentRect = containerRef.current?.parentElement?.parentElement?.getBoundingClientRect()
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (!!parentRect && rect) {
-            const parentHeight = parentRect.height;
-            const topDiff = rect.top - parentRect.top;
-            setHeight(parentHeight - topDiff)
-        }
-    }, [])
-}
-
 export default function ElementList({ elType, elements }) {
-    const [height, setHeight] = useState(1)
-    const containerRef = useRef(null)
 
-    // EFFECTS
-    setListHeight(containerRef, setHeight)
     return (
-        <div ref={containerRef} className="p-2 bg-yellow-200 rounded-md overflow-y-auto" style={{ height }}>
+        <div className="h-full p-2 bg-yellow-200 rounded-md overflow-y-auto" style={{ /* height */ }}>
             {renderListItems(elType, elements)}
         </div>
     )

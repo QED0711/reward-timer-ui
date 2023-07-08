@@ -60,7 +60,7 @@ export default function FullScreenTimer({ timer, isActive, timeRemaining, percen
     }, [percentageComplete])
 
     return (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-gray-600 z-30 flex items-center justify-center">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-gray-600 z-40 flex items-center justify-center">
             {
                 <div className="absolute top-2 left-2">
                     {
