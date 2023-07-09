@@ -1,5 +1,5 @@
 export default {
     apiProtocol: "https",
     apiHost: window.location.hostname,
-    apiPort: 8443
+    apiPort: 443
 }

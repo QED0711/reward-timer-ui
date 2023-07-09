@@ -18,7 +18,7 @@ RUN npm install
 WORKDIR /app
 
 COPY . /app
-RUN mv /app/src/config/config.deploy.js /app/src/config/config.js
+RUN rm /app/src/config/config.js; mv /app/src/config/config.deploy.js /app/src/config/config.js
 
 RUN npm run build
 
