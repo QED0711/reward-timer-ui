@@ -11,6 +11,7 @@ import EditForm from "./EditForm"
 
 // =============================== ICONS =============================== 
 import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, RiFullscreenLine } from 'react-icons/ri'
+import {FcRating} from 'react-icons/fc'
 
 // =============================== UTILS =============================== 
 import { millisIntoDay, msToDigital, msToHMS } from "../../utils/time"
@@ -82,7 +83,7 @@ const ElementTypes = {
         const [showFullScreen, setShowFullScreen] = useState(false)
         const [timeRemaining, setTimeRemaining] = useState(null)
         const [percentageComplete, setPercentageComplete] = useState(0);
-        
+
         // EVENTS
         const handleToggleStartCountdown = e => {
             e.preventDefault();
@@ -178,7 +179,7 @@ const ElementTypes = {
                 {
                     showFullScreen
                     &&
-                    <FullScreenTimer onClose={() => {setShowFullScreen(false); exitFullScreen()}} {...{timer, timeRemaining, percentageComplete}} />
+                    <FullScreenTimer onClose={() => { setShowFullScreen(false); exitFullScreen() }} {...{ timer, timeRemaining, percentageComplete }} />
                 }
 
                 <ListItemWrapper className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"}>
@@ -233,13 +234,20 @@ const ElementTypes = {
     Reward({ reward }) {
 
         // STATE
-        const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked])
+        const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked, mainManager.paths.selectedUser])
         const [showEdit, setShowEdit] = useState(false);
-
+        const [percentAchieved, setPercentAchieved] = useState(0);
+        
         // EVENTS
         const handleRowClick = () => {
             mainManager.setters.giveReward(reward)
         }
+
+        // EFFECTS
+        useEffect(() => {
+            setPercentAchieved(Math.max(Math.min(1, state.selectedUser?.points / reward.cost), 0))
+        }, [state.selectedUser?.points, reward.cost])
+
 
         return (
             <>
@@ -251,8 +259,16 @@ const ElementTypes = {
                     </Modal>
                 }
                 <ListItemWrapper className={"grid grid-cols-3"} onClick={handleRowClick}>
-                    <div>{reward.name}</div>
-                    <div>{reward.cost}</div>
+                    <div>
+                        {reward.name}
+                    </div>
+                    <div className="relative w-[90%] pl-1 bg-gray-200">
+                        <div className="absolute top-0 left-0 h-full bg-indigo-500 opacity-40" style={{width: `${percentAchieved * 100}%`}}></div>
+                        {reward.cost}
+                        {percentAchieved === 1 && <FcRating className="relative inline-block left-2" style={{top: "-3px"}} />}
+                        {percentAchieved < 1 && <sub className="block italic">{reward.cost - state.selectedUser?.points} needed</sub>}
+
+                    </div>
                     <div>
                         <button className={ICON_BUTTON_STYLE} disabled={!mainManager.state.speechSupported} onClick={handleSpeakClick(reward)}>{<RiVolumeUpFill />}</button>
                         <button className={ICON_BUTTON_STYLE} disabled={state.isLocked} onClick={e => { e.stopPropagation(); setShowEdit(true) }}>{<RiEdit2Fill className="" />}</button>
