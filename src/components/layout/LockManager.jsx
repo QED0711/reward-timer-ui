@@ -9,9 +9,9 @@ import { RiLock2Fill, RiLockUnlockLine, RiDeleteBack2Fill } from 'react-icons/ri
 import Modal from "./Modal";
 
 // COMPONENTS
-const KeypadButton = ({children, onClick}) => {
+const KeypadButton = ({children, onClick, colSpan = "col-span-1"}) => {
     return (
-        <button className="bg-indigo-200 text-indigo-900 text-xl lg:text-2xl border-indigo-700 shadow-sm shadow-indigo-800" onClick={onClick}>
+        <button className={`bg-indigo-200 text-indigo-900 text-xl lg:text-2xl border-indigo-700 shadow-sm shadow-indigo-800 ${colSpan}`} onClick={onClick}>
             {children}
         </button>
     )
@@ -76,17 +76,16 @@ export default function LockManager() {
                     <h1 className="text-gray-800 text-2xl font-bold text-center">Enter Pass Code</h1>
                     <div className={`text-gray-800 font-bold text-4xl text-center ${code.length ? "opacity-100" : "opacity-0"}`}>{code.length ? "* ".repeat(code.length) : "*"}</div>
                     <div className="grid grid-cols-3 gap-1 p-2 rounded-sm text-gray-800 bg-yellow-200 shadow-sm shadow-yellow-500">
-                        <KeypadButton onClick={appendToCode(7)}>7</KeypadButton>
-                        <KeypadButton onClick={appendToCode(8)}>8</KeypadButton>
-                        <KeypadButton onClick={appendToCode(9)}>9</KeypadButton>
-                        <KeypadButton onClick={appendToCode(4)}>4</KeypadButton>
-                        <KeypadButton onClick={appendToCode(5)}>5</KeypadButton>
-                        <KeypadButton onClick={appendToCode(6)}>6</KeypadButton>
                         <KeypadButton onClick={appendToCode(1)}>1</KeypadButton>
                         <KeypadButton onClick={appendToCode(2)}>2</KeypadButton>
                         <KeypadButton onClick={appendToCode(3)}>3</KeypadButton>
-                        <div></div>
-                        <KeypadButton onClick={appendToCode(0)}>0</KeypadButton>
+                        <KeypadButton onClick={appendToCode(4)}>4</KeypadButton>
+                        <KeypadButton onClick={appendToCode(5)}>5</KeypadButton>
+                        <KeypadButton onClick={appendToCode(6)}>6</KeypadButton>
+                        <KeypadButton onClick={appendToCode(7)}>7</KeypadButton>
+                        <KeypadButton onClick={appendToCode(8)}>8</KeypadButton>
+                        <KeypadButton onClick={appendToCode(9)}>9</KeypadButton>
+                        <KeypadButton onClick={appendToCode(0)} colSpan="col-span-2">0</KeypadButton>
                         <KeypadButton onClick={handleDeleteCodeEntry}><RiDeleteBack2Fill /></KeypadButton>
 
 

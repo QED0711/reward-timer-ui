@@ -73,7 +73,7 @@ const DashboardSection = ({ heading, onClick = () => { }, addButton, onAddClick 
             await new Promise(r => setTimeout(r, 50));
             const containerRect = sectionRef.current?.getBoundingClientRect?.();
             const contentRect = contentRef.current?.getBoundingClientRect?.();
-            if(!!containerRect && !!contentRect) setContentHeight(containerRect.bottom - contentRect.top);
+            if (!!containerRect && !!contentRect) setContentHeight(containerRect.bottom - contentRect.top);
         }
         exec();
     }, [windowSize])
@@ -96,9 +96,10 @@ const DashboardSection = ({ heading, onClick = () => { }, addButton, onAddClick 
     )
 }
 
-const TabSelector = ({tab, setTab}) => {
+const TabSelector = ({ tab, setTab }) => {
     return (
-        <div className="fixed bottom-0 left-0 z-30 grid grid-cols-4 w-screen text-center bg-gray-200 cursor-pointer">
+        <div className="fixed bottom-0 left-0 z-30 grid grid-cols-5 w-screen text-center bg-gray-200 cursor-pointer">
+            <div className={`py-4 ${tab === "points" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("points")}>POINTS</div>
             <div className={`py-4 ${tab === "tasks" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("tasks")}>TASKS</div>
             <div className={`py-4 ${tab === "timers" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("timers")}>TIMERS</div>
             <div className={`py-4 ${tab === "rewards" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("rewards")}>REWARDS</div>
@@ -114,7 +115,7 @@ export default function UserDashboard() {
     const [selectedSection, setSelectedSection] = useState(null);
     const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
     const [condensedView, setCondensedView] = useState(false);
-    const [tab, setTab] = useState("tasks")
+    const [tab, setTab] = useState("points")
     const windowSize = useWindowSize();
     const bodyRef = useRef(null)
 
@@ -132,19 +133,31 @@ export default function UserDashboard() {
 
             {/* {selectedSection && <DashboardNavButton title={"Dashboard"} onClick={() => { setSelectedSection(null) }} />} */}
 
-            <div 
-                ref={bodyRef} 
-                className="grid grid-cols-2 grid-rows-6 lg:grid-rows-12 gap-4 overflow-y-auto" 
-                style={{ height: windowSize.width < 1024 ? `calc(${bodyHeight}px - 4rem)` : `calc(${bodyHeight}px - 0.25rem)`}}
+            <div
+                ref={bodyRef}
+                className="grid grid-cols-2 grid-rows-6 lg:grid-rows-12 gap-4 overflow-y-auto"
+                style={{ height: windowSize.width < 1024 ? `calc(${bodyHeight}px - 4rem)` : `calc(${bodyHeight}px - 0.25rem)` }}
             >
 
-                <DashboardSection heading="Points" className={"col-span-2 row-span-1 lg:row-span-2"}>
-                    <h1 className="lg:text-5xl text-2xl text-center drop-shadow-md" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
-                        <button className="py-0 px-1 mx-8 text-red-500 disabled:opacity-50 disabled:cursor-not-allowed" disabled={state.isLocked} onClick={adjustPoints(-5)}>-5</button>
-                        {state.selectedUser.points}
-                        <button className="py-0 px-1 mx-8 text-green-500 disabled:opacity-50 disabled:cursor-not-allowed" disabled={state.isLocked} onClick={adjustPoints(5)}>+5</button>
-                    </h1>
-                </DashboardSection>
+                {
+                    (!condensedView || tab === "points")
+                    &&
+                    <DashboardSection heading="Points" className={"col-span-2 row-span-6 lg:row-span-2"}>
+                        <h1 className="lg:text-5xl text-2xl text-center" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
+                            {
+                                !state.isLocked
+                                &&
+                                <button className="py-0 px-1 mx-8 text-red-500 shadow-sm shadow-gray-400 disabled:cursor-not-allowed" disabled={state.isLocked} onClick={adjustPoints(-5)}>-5</button>
+                            }
+                            {state.selectedUser.points}
+                            {
+                                !state.isLocked
+                                &&
+                                <button className="py-0 px-1 mx-8 text-green-500 shadow-sm shadow-gray-400 disabled:cursor-not-allowed" disabled={state.isLocked} onClick={adjustPoints(5)}>+5</button>
+                            }
+                        </h1>
+                    </DashboardSection>
+                }
 
                 {
                     (!condensedView || tab === "tasks")
@@ -153,7 +166,7 @@ export default function UserDashboard() {
                         heading="Tasks"
                         addButton
                         onAddClick={handleAddClick("task", setSelectedSection)}
-                        className="row-span-5 lg:row-span-5 col-span-2 lg:col-span-1"
+                        className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
                         <ElementList elType={"task"} elements={state.selectedUser.tasks} />
@@ -167,7 +180,7 @@ export default function UserDashboard() {
                         heading="Timers"
                         addButton
                         onAddClick={handleAddClick("timer", setSelectedSection)}
-                        className="row-span-5 lg:row-span-5 col-span-2 lg:col-span-1"
+                        className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
                         <ElementList elType={"timer"} elements={state.selectedUser.timers} />
@@ -181,7 +194,7 @@ export default function UserDashboard() {
                         heading="Rewards"
                         addButton
                         onAddClick={handleAddClick("reward", setSelectedSection)}
-                        className="row-span-5 lg:row-span-5 col-span-2 lg:col-span-1"
+                        className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
                         <ElementList elType={"reward"} elements={state.selectedUser.rewards} />
@@ -194,14 +207,14 @@ export default function UserDashboard() {
                         heading="Deductions"
                         addButton
                         onAddClick={handleAddClick("deduction", setSelectedSection)}
-                        className="row-span-5 lg:row-span-5 col-span-2 lg:col-span-1"
+                        className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
                         <ElementList elType={"deduction"} elements={state.selectedUser.deductions} />
                     </DashboardSection>
                 }
             </div>
-            { condensedView && <TabSelector {...{tab, setTab}} />}
+            {condensedView && <TabSelector {...{ tab, setTab }} />}
         </div >
     )
 }
