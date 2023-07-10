@@ -20,7 +20,7 @@ const handleAddClick = (section, setSelectedSection) => () => {
 }
 
 const adjustPoints = (amount) => () => {
-    mainManager.setters.adjustSelectedUserPoints(amount)
+    mainManager.setters.adjustSelectedUserPoints(amount, {eventType: "Point Adjustment", eventName: amount > 0 ? "Add" : "Subtract"})
 }
 
 
@@ -148,7 +148,7 @@ export default function UserDashboard() {
                     (!condensedView || tab === "points")
                     &&
                     <DashboardSection heading="Points" className={"col-span-2 row-span-6 lg:row-span-2"}>
-                        <h1 className="lg:text-5xl text-2xl text-center" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
+                        <h1 className="relative top-[45%] lg:top-0 text-5xl  text-center" style={{ color: state.selectedUser.points > 0 ? "#22c55e" : "#ef4444" }}>
                             {
                                 !state.isLocked
                                 &&

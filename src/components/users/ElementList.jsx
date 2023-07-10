@@ -14,7 +14,7 @@ import { RiDeleteBinFill, RiEdit2Fill, RiVolumeUpFill, RiPlayFill, RiStopFill, R
 import {FcRating} from 'react-icons/fc'
 
 // =============================== UTILS =============================== 
-import { millisIntoDay, msToDigital, msToHMS } from "../../utils/time"
+import { millisIntoDay, msToDigital } from "../../utils/time"
 import { enterFullScreen, exitFullScreen } from "../../utils/std"
 
 // STYLES
@@ -49,7 +49,7 @@ const ElementTypes = {
 
         // EVENTS
         const handleRowClick = () => {
-            mainManager.setters.adjustSelectedUserPoints(task.amount)
+            mainManager.setters.adjustSelectedUserPoints(task.amount, {eventType: "Task Completed", eventName: task.name})
         }
 
         return (
@@ -286,7 +286,7 @@ const ElementTypes = {
 
         // EVENTS
         const handleRowClick = () => {
-            mainManager.setters.adjustSelectedUserPoints(deduction.cost * -1)
+            mainManager.setters.adjustSelectedUserPoints(deduction.cost * -1, {eventType: "Deduction", eventName: deduction.name})
         }
         return (
             <>

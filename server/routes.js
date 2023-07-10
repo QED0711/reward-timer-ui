@@ -93,7 +93,11 @@ export default [
         path: "/:userID/history",
         async callback(req, res){
             const {userID} = req.params;
-            res.send(db.data.eventHistory.filter(event => event.userID === userID));
+            res.send(
+                db.data.eventHistory
+                    .filter(event => event.userID === userID)
+                    .sort((a,b) => b.time - a.time)
+                );
         }
     },
 
@@ -105,12 +109,27 @@ export default [
             const {eventType, eventName, points} = req.body;
             const time = Date.now()
             db.data.eventHistory.push({
+                id: nanoid(),
                 userID, 
                 time,
                 eventType,
                 eventName,
                 points,
             })
+
+            db.data.eventHistory = db.data.eventHistory.filter(event => time - event.time < 2.592e+9) // less than the last 30 days in ms
+
+            await db.write();
+            res.send({status: "success"})
+
+        }
+    },
+
+    {
+        method: "delete",
+        path: "/history",
+        async callback(req, res){
+            db.data.eventHistory = []
             await db.write();
             res.send({status: "success"})
 

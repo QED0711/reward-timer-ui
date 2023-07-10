@@ -36,7 +36,7 @@ const setters = {
         }, null, [this.paths.isLocked])
     },
 
-    adjustSelectedUserPoints(amount) {
+    adjustSelectedUserPoints(amount, details={}) {
         this.setState(prevState => {
             const { selectedUser } = prevState;
             if (!selectedUser || prevState.isLocked) return {};
@@ -44,6 +44,7 @@ const setters = {
             return [{ selectedUser: { ...selectedUser, points: selectedUser.points + amount } }, [this.paths.selectedUser]];
 
         }, () => {
+            this.restAPI.recordEvent({eventType: details.eventType, eventName: details.eventName, points: amount})
             this.methods.syncSelectedUser();
         })
     }, 
@@ -58,6 +59,7 @@ const setters = {
             }
             return {selectedUser: {...selectedUser, points: selectedUser.points - reward.cost}};
         }, () => {
+            this.restAPI.recordEvent({eventType: "Reward", eventName: reward.name, points:-1 * reward.cost})
             this.methods.syncSelectedUser()
         })
     },

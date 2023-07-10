@@ -86,13 +86,13 @@ const FormType = {
                     &&
                     <div className="grid grid-cols-3 gap-1">
                         <FormLabel text="Hours" className={"w-16"}>
-                            <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="hours" value={msToHMS(cloned.time).hours} onChange={handleUpdate(cloned, "time", setCloned)} />
+                            <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="hours" value={msToHMS(cloned.time)?.hours ?? 0} onChange={handleUpdate(cloned, "time", setCloned)} />
                         </FormLabel>
                         <FormLabel text="Minutes" className={"w-16"}>
-                            <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="minutes" value={msToHMS(cloned.time).minutes} onChange={handleUpdate(cloned, "time", setCloned)} />
+                            <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="minutes" value={msToHMS(cloned.time)?.minutes ?? 0} onChange={handleUpdate(cloned, "time", setCloned)} />
                         </FormLabel>
                         <FormLabel text="Seconds" className={"w-16"}>
-                            <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="seconds" value={msToHMS(cloned.time).seconds} onChange={handleUpdate(cloned, "time", setCloned)} />
+                            <input className={INPUT_STYLE} type="number" data-timeinput={true} data-unit="seconds" value={msToHMS(cloned.time)?.seconds ?? 0} onChange={handleUpdate(cloned, "time", setCloned)} />
                         </FormLabel>
                     </div>
                 }

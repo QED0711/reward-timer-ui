@@ -21,6 +21,7 @@ export function msToDigital(ms, cycle = 24) {
 
 
 export function msToHMS(ms){
+    if(ms === undefined || ms === null) return null;
     const hours = Math.floor(ms / 3600000); // 1 Hour = 3600000 Milliseconds
     const minutes = Math.floor((ms % 3600000) / 60000); // 1 Minute = 60000 Milliseconds
     const seconds = Math.floor(((ms % 3600000) % 60000) / 1000); // 1 Second = 1000 Milliseconds

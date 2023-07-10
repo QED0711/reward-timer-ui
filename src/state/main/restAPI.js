@@ -220,7 +220,7 @@ export default {
             axios.get(API_BASE + `/${this.state.selectedUser.id}/history`)
                 .then(response => {
                     if (response.status === 200) {
-                        this.setters.setEventHistory(response.data);
+                        console.log(response.data);
                         resolve(response.data);
                     }
                 })
@@ -233,7 +233,7 @@ export default {
 
     recordEvent({ eventType, eventName, points, }) {
         return new Promise(resolve => {
-            axios.post(API_BASE + `/${this.state.selectedUser.id}/history`)
+            axios.post(API_BASE + `/${this.state.selectedUser.id}/history`, {eventType, eventName, points})
                 .then(response => {
                     if (response.status === 200) {
                         resolve(response.data);
