@@ -9,6 +9,7 @@ const stateSchema = {
 
     users: [],
     selectedUser: null,
+    eventHistory: [],
     
     admins: [],
 

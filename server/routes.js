@@ -88,6 +88,34 @@ export default [
         }
     },
 
+    {
+        method: "get",
+        path: "/:userID/history",
+        async callback(req, res){
+            const {userID} = req.params;
+            res.send(db.data.eventHistory.filter(event => event.userID === userID));
+        }
+    },
+
+    {
+        method: "post",
+        path: "/:userID/history",
+        async callback(req, res){
+            const {userID} = req.params;
+            const {eventType, eventName, points} = req.body;
+            const time = Date.now()
+            db.data.eventHistory.push({
+                userID, 
+                time,
+                eventType,
+                eventName,
+                points,
+            })
+            await db.write();
+            res.send({status: "success"})
+
+        }
+    },
 
     {
         method: "get",

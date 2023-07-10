@@ -9,9 +9,10 @@ import ElementList from "./ElementList"
 import SelectedSection from "./SelectedSection"
 
 // ============================ ICONS ============================ 
-import { RiAddCircleLine } from 'react-icons/ri'
+import { RiAddCircleLine, RiFileHistoryLine } from 'react-icons/ri'
 import NewEntityForm from "./NewEntityForm"
 import { useWindowSize } from "../../utils/hooks"
+import EventHistory from "./EventHistory"
 
 // EVENTS 
 const handleAddClick = (section, setSelectedSection) => () => {
@@ -116,6 +117,7 @@ export default function UserDashboard() {
     const [bodyHeight, setBodyHeight] = useState(window.innerHeight);
     const [condensedView, setCondensedView] = useState(false);
     const [tab, setTab] = useState("points")
+    const [showEventHistory, setShowEventHistory] = useState(false)
     const windowSize = useWindowSize();
     const bodyRef = useRef(null)
 
@@ -129,8 +131,11 @@ export default function UserDashboard() {
             style={{ height: windowSize.width < 1024 ? "calc(100vh - 6rem)" : "calc(100vh - 2rem)" }}
         >
             {selectedSection && <NewEntityForm type={selectedSection} setSelectedSection={setSelectedSection} />}
-            <h1 className="lg:inline-block block mr-4 text-3xl">{state.selectedUser.name}</h1>
-
+            <h1 className="lg:inline-block block mr-4 text-3xl">
+                {state.selectedUser.name}
+                <RiFileHistoryLine className="inline-block mx-2 cursor-pointer" onClick={() => {setShowEventHistory(true)}} />
+            </h1>
+            {showEventHistory && <EventHistory {...{setShowEventHistory}} />}
             {/* {selectedSection && <DashboardNavButton title={"Dashboard"} onClick={() => { setSelectedSection(null) }} />} */}
 
             <div

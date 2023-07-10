@@ -213,6 +213,37 @@ export default {
                     resolve([])
                 })
         })
+    },
+
+    getUserHistory() {
+        return new Promise(resolve => {
+            axios.get(API_BASE + `/${this.state.selectedUser.id}/history`)
+                .then(response => {
+                    if (response.status === 200) {
+                        this.setters.setEventHistory(response.data);
+                        resolve(response.data);
+                    }
+                })
+                .catch(err => {
+                    resolve([]);
+                    console.error(err);
+                })
+        })
+    },
+
+    recordEvent({ eventType, eventName, points, }) {
+        return new Promise(resolve => {
+            axios.post(API_BASE + `/${this.state.selectedUser.id}/history`)
+                .then(response => {
+                    if (response.status === 200) {
+                        resolve(response.data);
+                    }
+                })
+                .catch(err => {
+                    resolve({ success: false });
+                    console.error(err);
+                })
+        })
     }
 
 }
