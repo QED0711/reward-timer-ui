@@ -96,7 +96,7 @@ export default [
             res.send(
                 db.data.eventHistory
                     .filter(event => event.userID === userID)
-                    .sort((a,b) => b.time - a.time)
+                    .sort((a,b) => b.time - a.time) // most recent events first
                 );
         }
     },

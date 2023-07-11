@@ -220,7 +220,6 @@ export default {
             axios.get(API_BASE + `/${this.state.selectedUser.id}/history`)
                 .then(response => {
                     if (response.status === 200) {
-                        console.log(response.data);
                         resolve(response.data);
                     }
                 })
