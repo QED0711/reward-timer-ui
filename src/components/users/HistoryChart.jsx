@@ -23,11 +23,12 @@ export default function HistoryChart({ history }) {
     useEffect(() => {
         const selectedUser = mainManager.getters.getSelectedUser();
         let { points } = selectedUser;
-
-        const data = history.map(event => {
-            points += -1 * event.points;
-            return { name: event.time, points }
-        })
+        let data = Array.from({length: history.length});
+        // TODO: need to flip the data from its original order
+        for(let i = history.length - 1; i >= 0; i--) {
+            points -= history[i].points;
+            data[i] = {name: history[i].time, points};
+        }
 
         setFormattedData(data);
 
