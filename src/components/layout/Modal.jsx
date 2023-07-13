@@ -29,7 +29,7 @@ const Modal = ({
         <>
             <div className="fixed inset-0 bg-black bg-opacity-50 blur-md z-40" onClick={(e) => e.stopPropagation()} />
             <div className="fixed inset-0 flex items-center justify-center z-40">
-                <div className={"relative bg-white p-12 rounded-md " + containerStyle}>
+                <div className={"relative max-h-[95%] max-w-[95%] bg-gray-100 p-12 rounded-md " + containerStyle}>
                     {closeButton && <RiCloseCircleLine size={"1.5rem"} color="black" className='absolute left-2 top-2 cursor-pointer' onClick={() => onClose()} />}
                     {children}
                 </div>

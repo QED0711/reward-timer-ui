@@ -170,7 +170,7 @@ export default function EditForm({ type, content, onClose }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2 className="text-center text-2xl font-bold capitalize">Edit {type}</h2>
+            <h2 className="text-center text-2xl text-gray-800 font-bold capitalize">Edit {type}</h2>
             {renderEditType(type, cloned, setCloned)}
 
             <FormLabel text={"Description (optional)"}>

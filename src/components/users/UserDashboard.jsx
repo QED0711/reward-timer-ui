@@ -99,12 +99,12 @@ const DashboardSection = ({ heading, onClick = () => { }, addButton, onAddClick 
 
 const TabSelector = ({ tab, setTab }) => {
     return (
-        <div className="fixed bottom-0 left-0 z-30 grid grid-cols-5 w-screen text-center bg-gray-200 cursor-pointer">
-            <div className={`py-4 ${tab === "points" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("points")}>POINTS</div>
-            <div className={`py-4 ${tab === "tasks" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("tasks")}>TASKS</div>
-            <div className={`py-4 ${tab === "timers" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("timers")}>TIMERS</div>
-            <div className={`py-4 ${tab === "rewards" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("rewards")}>REWARDS</div>
-            <div className={`py-4 ${tab === "deductions" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("deductions")}>DEDUCTIONS</div>
+        <div className="fixed bottom-0 left-0 z-30 grid grid-cols-5 w-screen text-center md:uppercase text-sm bg-gray-200 cursor-pointer">
+            <div className={`py-4 ${tab === "points" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("points")}>points</div>
+            <div className={`py-4 ${tab === "tasks" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("tasks")}>tasks</div>
+            <div className={`py-4 ${tab === "timers" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("timers")}>timers</div>
+            <div className={`py-4 ${tab === "rewards" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("rewards")}>rewards</div>
+            <div className={`py-4 ${tab === "deductions" && "bg-gray-500 text-gray-100"}`} onClick={() => setTab("deductions")}>deductions</div>
         </div>
     )
 }
@@ -174,7 +174,7 @@ export default function UserDashboard() {
                         className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
-                        <ElementList elType={"task"} elements={state.selectedUser.tasks} />
+                        <ElementList elType={"task"} elements={state.selectedUser.tasks.sort((a,b) => a.amount - b.amount)} />
                     </DashboardSection>
                 }
 
@@ -202,7 +202,7 @@ export default function UserDashboard() {
                         className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
-                        <ElementList elType={"reward"} elements={state.selectedUser.rewards} />
+                        <ElementList elType={"reward"} elements={state.selectedUser.rewards.sort((a,b) => a.cost - b.cost)} />
                     </DashboardSection>
                 }
                 {
@@ -215,7 +215,7 @@ export default function UserDashboard() {
                         className="row-span-6 lg:row-span-5 col-span-2 lg:col-span-1"
                         windowSize={windowSize}
                     >
-                        <ElementList elType={"deduction"} elements={state.selectedUser.deductions} />
+                        <ElementList elType={"deduction"} elements={state.selectedUser.deductions.sort((a,b) => a.cost - b.cost)} />
                     </DashboardSection>
                 }
             </div>
