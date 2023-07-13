@@ -5,11 +5,11 @@ import mainManager from "../../state/main/mainManager";
 const ActiveDot = (props) => {
     const { cx, cy, stroke, index: dataIndex, value, activeIndex } = props;
     return dataIndex === activeIndex ? (
-        <svg x={cx - 10} y={cy - 30} width={20} height={30}>
+        <svg x={cx - 10} y={cy - 30} width={20} height={40}>
             <text x={10} y={15} textAnchor="middle" fill={value > 0 ? "#16a34a" : "#dc2626"}>
                 {value}
             </text>
-            <circle cx={10} cy={25} r={5} stroke={stroke} strokeWidth={1} fill={stroke} />
+            <circle cx={10} cy={30} r={4} stroke={"white"} strokeWidth={2} fill={stroke} />
         </svg>
     ) : (
         <></>
@@ -25,23 +25,21 @@ const HoveredDotLabel = (props) => {
     return null;
 };
 
-export default function HistoryChart({ history, activeIndex, setActiveIndex }) {
-    const [formattedData, setFormattedData] = useState([
-        { name: "test", points: 10 },
-        { name: "test2", points: 20 },
-    ]);
+export default function HistoryChart({ history, activeIndex, formattedData, setFormattedData }) {
+    // const [formattedData, setFormattedData] = useState([]);
 
+    // EFFECTS
     useEffect(() => {
-        const selectedUser = mainManager.getters.getSelectedUser();
-        let { points } = selectedUser;
-        let data = Array.from({ length: history.length });
+        // const selectedUser = mainManager.getters.getSelectedUser();
+        // let { points } = selectedUser;
+        // let data = Array.from({ length: history.length });
 
-        for (let i = 0; i < history.length; i++) {
-            points -= history[i].points;
-            data[history.length - 1 - i] = { name: history[i].time, points }; // flip the indeces so the chart reads left to right
-        }
+        // for (let i = 0; i < history.length; i++) {
+        //     points -= history[i].points;
+        //     data[history.length - 1 - i] = { name: history[i].time, points }; // flip the indeces so the chart reads left to right
+        // }
 
-        setFormattedData(data);
+        // setFormattedData(data);
     }, [history]);
 
     return (
