@@ -1,34 +1,35 @@
-import { useEffect, useState } from "react"
-import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { useSpiccatoState } from "spiccato-react"
-import mainManager from "../../state/main/mainManager"
+import { useEffect, useState } from "react";
+import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import mainManager from "../../state/main/mainManager";
 
 const ActiveDot = (props) => {
-    const { cx, cy, stroke, index: dataIndex, payload, activeIndex } = props;
-    return dataIndex === activeIndex
-        ? (
-            <svg x={cx - 4} y={cy - 4} width={8} height={8} fill="green">
-                <circle cx={4} cy={4} r={4} stroke={stroke} strokeWidth={1} fill={stroke} />
-            </svg>
-        )
-        : (<></>)
-}
+    const { cx, cy, stroke, index: dataIndex, value, activeIndex } = props;
+    return dataIndex === activeIndex ? (
+        <svg x={cx - 10} y={cy - 30} width={20} height={30}>
+            <text x={10} y={15} textAnchor="middle" fill={value > 0 ? "#16a34a" : "#dc2626"}>
+                {value}
+            </text>
+            <circle cx={10} cy={25} r={5} stroke={stroke} strokeWidth={1} fill={stroke} />
+        </svg>
+    ) : (
+        <></>
+    );
+};
 
 const HoveredDotLabel = (props) => {
-    const { active, payload, label: dataIndex, activeIndex } = props
+    const { active, payload, label: dataIndex, activeIndex } = props;
     if (active && payload && payload.length) {
         const val = payload[0].value;
-        return (
-            <div className={val > 0 ? "text-green-600" : "text-red-600"}>
-                {val}
-            </div>
-        )
+        return <div className={val > 0 ? "text-green-600" : "text-red-600"}>{val}</div>;
     }
     return null;
-}
+};
 
 export default function HistoryChart({ history, activeIndex, setActiveIndex }) {
-    const [formattedData, setFormattedData] = useState([{ name: "test", points: 10 }, { name: "test2", points: 20 }])
+    const [formattedData, setFormattedData] = useState([
+        { name: "test", points: 10 },
+        { name: "test2", points: 20 },
+    ]);
 
     useEffect(() => {
         const selectedUser = mainManager.getters.getSelectedUser();
@@ -41,35 +42,31 @@ export default function HistoryChart({ history, activeIndex, setActiveIndex }) {
         }
 
         setFormattedData(data);
-
-    }, [history])
+    }, [history]);
 
     return (
-        <div className="w-full h-[150px] pt-4 rounded-md bg-indigo-100" >
-            <ResponsiveContainer height="100%" width="98%" >
-                <LineChart
-                    data={formattedData}
-                    height={100}
-                >
+        <div className="w-full h-[150px] pt-4 rounded-md bg-indigo-100">
+            <ResponsiveContainer height="100%" width="98%">
+                <LineChart data={formattedData} height={100}>
                     <CartesianGrid strokeDasharray={[3, 3]} fill="#fde047" />
                     <Line
                         dataKey="points"
                         stroke="#6366f1"
                         type={"monotone"}
                         dot={<ActiveDot {...{ activeIndex }} />}
-                    // dot={false} 
-                    // activeDot={activeIndex !== null ? { r: 4 } : {r: 0}} 
-                    // activeDot={ }
+                        // dot={false}
+                        // activeDot={activeIndex !== null ? { r: 4 } : {r: 0}}
+                        // activeDot={ }
                     />
                     <XAxis tick={<></>}>
                         <Label value="Last 30 Days" />
                     </XAxis>
-                    <YAxis >
+                    <YAxis>
                         <Label value="Points" angle={-90} position={"left"} offset={-15} />
                     </YAxis>
-                    <Tooltip content={<HoveredDotLabel {...{ activeIndex }} />} />
+                    <Tooltip content={<HoveredDotLabel {...{ activeIndex }} />} isAnimationActive={false} active={true} />
                 </LineChart>
             </ResponsiveContainer>
         </div>
-    )
+    );
 }
