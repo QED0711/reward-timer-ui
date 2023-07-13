@@ -5,7 +5,7 @@ const stateSchema = {
     serverTimezone: "",
 
     showSidebar: true,
-    isLocked: false,
+    isLocked: import.meta.env.PROD,
 
     users: [],
     selectedUser: null,
