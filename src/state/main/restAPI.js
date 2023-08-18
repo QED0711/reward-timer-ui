@@ -11,6 +11,9 @@ import {
 } from "@ngneat/falso";
 
 import { DateTime } from "luxon"
+import apiManager from "../../api/apiManager";
+
+axios.defaults.headers.common['x-api-key'] = apiManager.getters.getApiKey() ?? ""
 
 const _randomTaskFactory = () => (
     {

@@ -49,6 +49,14 @@ const credentials = { key: privateKey, cert: certificate };
 const server = https.createServer(credentials, app);
 export const io = new Server(server, { cors: corsOptions });
 
+// API Key Verification
+app.use(function(req, res, next){
+    const apiKey = req.headers["x-api-key"];
+    if("apiKeys" in auth && (!apiKey || !auth.apiKeys?.includes?.(apiKey))){
+        return res.json({})
+    }
+    next();
+})
 for (let route of routes) {
     app[route.method]?.(route.path, bodyParser.json(), route.callback)
 }

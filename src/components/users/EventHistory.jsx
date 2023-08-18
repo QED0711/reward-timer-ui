@@ -34,7 +34,7 @@ export default function EventHistory({ setShowEventHistory }) {
             >
                 <div>{DateTime.fromMillis(event.time).toFormat(windowSize.width < 768 ? "MM/d HH:mm" : "LLL d - hh:mm a")}</div>
                 <div className="truncate" title={event.eventType}>{event.eventType}</div>
-                <div className="truncate" title={event.eventName}>{event.eventName}</div>
+                <div className="" title={event.eventName}>{event.eventName}</div>
                 <div>
                     {" "}
                     {event.points > 0 && "+"}

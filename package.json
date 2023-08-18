@@ -20,7 +20,7 @@
     "react-router-dom": "^6.9.0",
     "recharts": "^2.7.2",
     "socket.io-client": "^4.7.1",
-    "spiccato": "^0.3.1",
+    "spiccato": "^0.3.3",
     "spiccato-react": "^0.1.1",
     "tone": "^14.7.77"
   },
