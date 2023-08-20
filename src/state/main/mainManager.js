@@ -15,6 +15,8 @@ const mainManager = new Spiccato(
     }
 )
 
+mainManager.init();
+
 mainManager.addCustomGetters(getters)
 mainManager.addCustomSetters(setters)
 mainManager.addCustomMethods(methods)
@@ -27,7 +29,6 @@ mainManager.connectToLocalStorage({
 })
 */
 
-mainManager.init();
 
 if(import.meta.env.MODE === "development") window._mainManager = mainManager;
 

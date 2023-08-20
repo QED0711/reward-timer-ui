@@ -1,6 +1,6 @@
 import { API_BASE } from "../../config/parsedConfig";
 import axios from "axios";
-import {
+/* import {
     randFullName,
     randNumber,
     randUuid,
@@ -8,14 +8,11 @@ import {
     randJobDescriptor,
     randVerb,
     randAlpha
-} from "@ngneat/falso";
+} from "@ngneat/falso"; */
 
-import { DateTime } from "luxon"
 import apiManager from "../../api/apiManager";
 
-axios.defaults.headers.common['x-api-key'] = apiManager.getters.getApiKey() ?? ""
-
-const _randomTaskFactory = () => (
+/* const _randomTaskFactory = () => (
     {
         id: randUuid(),
         name: randVerb(),
@@ -64,27 +61,41 @@ const _randomDeductionFactory = () => (
         cost: randNumber({ min: 10, max: 500, precision: 10 }),
         description: randPhrase({ length: 1 })[0],
     }
-)
+) */
+
+// AXIOS Setup
+axios.defaults.headers.common["x-api-key"] = apiManager.getters.getApiKey() ?? "";
+
+axios.interceptors.response.use(
+    (response) => response,
+    (err) => {
+        if (err.response && err.response.status === 401 && ("apiKeyError" in err.response.data ?? {})) {
+            apiManager.setters.setApiKey("");
+        }
+        return Promise.reject(err);
+    }
+);
 
 export default {
-
     getUsers() {
-        return new Promise(resolve => {
-            axios.get(API_BASE + "/users")
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .get(API_BASE + "/users")
+                .then((response) => {
                     if (response.status === 200) {
                         this.setters.setUsers(response.data);
+                    } else if (response.status === 400) {
+                        debugger;
                     }
-                    resolve(response.data)
+                    resolve(response.data);
                 })
-                .catch(err => {
-                    console.error(err)
-                    this.setters.setUsers([])
-                    resolve([])
-                })
+                .catch((err) => {
+                    this.setters.setUsers([]);
+                    resolve([]);
+                });
             // const users = Array.from({length:20}, () => ({
             //     id: randUuid(),
-            //     name: randFullName(), 
+            //     name: randFullName(),
             //     points: randNumber({min: -10_000, max: 10_000, precision: 100}),
             //     tasks: Array.from({length: randNumber({min: 0, max: 10})}, _randomTaskFactory),
             //     timers: Array.from({length: randNumber({min: 0, max: 5})}, _randomTimerFactory),
@@ -94,103 +105,108 @@ export default {
             // }))
             // this.setters.setUsers(users)
             // resolve(users)
-        })
+        });
     },
 
     createUser(user) {
-        return new Promise(resolve => {
-            axios.post(API_BASE + "/user", user)
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .post(API_BASE + "/user", user)
+                .then((response) => {
                     if (response.status === 200) {
                         this.restAPI.getUsers();
-                        resolve(response.data)
+                        resolve(response.data);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     resolve(null);
-                })
-        })
+                });
+        });
     },
 
     updateUser(user) {
-        return new Promise(resolve => {
-            axios.put(API_BASE + "/user", user)
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .put(API_BASE + "/user", user)
+                .then((response) => {
                     if (response.status === 200) {
                         this.restAPI.getUsers();
-                        resolve(response.data)
+                        resolve(response.data);
                     } else {
-                        resolve(null)
+                        resolve(null);
                     }
                 })
-                .catch(err => {
-                    console.error(err)
-                    resolve(null)
-                })
-        })
+                .catch((err) => {
+                    console.error(err);
+                    resolve(null);
+                });
+        });
     },
 
     deleteUser(user) {
-        return new Promise(resolve => {
-            axios.delete(API_BASE + "/user", { data: { id: user.id } })
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .delete(API_BASE + "/user", { data: { id: user.id } })
+                .then((response) => {
                     this.restAPI.getUsers();
-                    resolve(user.id)
+                    resolve(user.id);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     resolve(null);
-                })
-        })
+                });
+        });
     },
-
 
     startCountdown(timerID) {
         const userID = this.state.selectedUser?.id;
-        return new Promise(resolve => {
-            axios.post(API_BASE + "/timer/start", { userID, timerID })
-                .then(response => {
-                    resolve(response.data)
+        return new Promise((resolve) => {
+            axios
+                .post(API_BASE + "/timer/start", { userID, timerID })
+                .then((response) => {
+                    resolve(response.data);
                 })
-                .catch(err => {
-                    console.error(err)
-                    resolve(null)
-                })
-        })
+                .catch((err) => {
+                    console.error(err);
+                    resolve(null);
+                });
+        });
     },
 
     stopCountdown(timerID) {
         const userID = this.state.selectedUser?.id;
-        return new Promise(resolve => {
-            axios.post(API_BASE + "/timer/stop", { userID, timerID })
-                .then(response => {
-                    resolve(response.data)
+        return new Promise((resolve) => {
+            axios
+                .post(API_BASE + "/timer/stop", { userID, timerID })
+                .then((response) => {
+                    resolve(response.data);
                 })
-                .catch(err => {
-                    console.error(err)
-                    resolve(null)
-                })
-        })
+                .catch((err) => {
+                    console.error(err);
+                    resolve(null);
+                });
+        });
     },
 
     getAdmins() {
-        return new Promise(resolve => {
-            axios.get(API_BASE + "/admins")
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .get(API_BASE + "/admins")
+                .then((response) => {
                     if (response.status === 200) {
                         this.setters.setAdmins(response.data);
                         resolve(response.data);
                     } else {
                         this.setters.setAdmins([]);
-                        resolve([])
+                        resolve([]);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     this.setters.setAdmins([]);
-                    resolve([])
-                })
+                    resolve([]);
+                });
             //     const admins = Array.from({length: 3}, () => ({
             //         id: randUuid(),
             //         name: randFullName(),
@@ -198,55 +214,56 @@ export default {
             //     }))
             //     this.setters.setAdmins(admins)
             //     resolve(admins)
-        })
+        });
     },
 
     createAdmin(admin) {
-        return new Promise(resolve => {
-            axios.post(API_BASE + "/admin", admin)
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .post(API_BASE + "/admin", admin)
+                .then((response) => {
                     if (response.status === 200) {
                         this.restAPI.getAdmins();
-                        resolve(response.data)
+                        resolve(response.data);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error(err);
                     this.restAPI.getAdmins();
-                    resolve([])
-                })
-        })
+                    resolve([]);
+                });
+        });
     },
 
     getUserHistory() {
-        return new Promise(resolve => {
-            axios.get(API_BASE + `/${this.state.selectedUser.id}/history`)
-                .then(response => {
+        return new Promise((resolve) => {
+            axios
+                .get(API_BASE + `/${this.state.selectedUser.id}/history`)
+                .then((response) => {
                     if (response.status === 200) {
                         resolve(response.data);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     resolve([]);
                     console.error(err);
-                })
-        })
+                });
+        });
     },
 
-    recordEvent({ eventType, eventName, points, }) {
-        return new Promise(resolve => {
-            axios.post(API_BASE + `/${this.state.selectedUser.id}/history`, {eventType, eventName, points})
-                .then(response => {
+    recordEvent({ eventType, eventName, points }) {
+        return new Promise((resolve) => {
+            axios
+                .post(API_BASE + `/${this.state.selectedUser.id}/history`, { eventType, eventName, points })
+                .then((response) => {
                     if (response.status === 200) {
                         resolve(response.data);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     resolve({ success: false });
                     console.error(err);
-                })
-        })
-    }
-
-}
-
+                });
+        });
+    },
+};

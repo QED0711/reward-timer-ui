@@ -53,7 +53,8 @@ export const io = new Server(server, { cors: corsOptions });
 app.use(function(req, res, next){
     const apiKey = req.headers["x-api-key"];
     if("apiKeys" in auth && (!apiKey || !auth.apiKeys?.includes?.(apiKey))){
-        return res.json({})
+        res.status(401)
+        return res.json({"apiKeyError": "API Key missing or no found match"})
     }
     next();
 })
