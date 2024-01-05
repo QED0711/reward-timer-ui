@@ -36,6 +36,7 @@ const setters = {
     },
 
     adjustSelectedUserPoints(amount, details={}) {
+        if(this.state.isLocked) return;
         this.setState(prevState => {
             const { selectedUser } = prevState;
             if (!selectedUser || prevState.isLocked) return {};
@@ -49,6 +50,7 @@ const setters = {
     }, 
     
     giveReward(reward){
+        if(this.state.isLocked) return;
         this.setState(prevState => {
             const selectedUser = !!prevState.selectedUser ? {...prevState.selectedUser} : null;
             if(!selectedUser || prevState.isLocked) return {};
