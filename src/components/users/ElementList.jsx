@@ -83,6 +83,7 @@ const ElementTypes = {
         const [showFullScreen, setShowFullScreen] = useState(false)
         const [timeRemaining, setTimeRemaining] = useState(null)
         const [percentageComplete, setPercentageComplete] = useState(0);
+        const [refreshTime, setRefreshTime] = useState(0);
 
         // EVENTS
         const handleToggleStartCountdown = e => {
@@ -164,7 +165,7 @@ const ElementTypes = {
                 }, 1000);
             }
 
-        }, [timer.type, timer.start, timer.end])
+        }, [timer.type, timer.start, timer.end, refreshTime,])
 
         return (
             <>
@@ -179,7 +180,7 @@ const ElementTypes = {
                 {
                     showFullScreen
                     &&
-                    <FullScreenTimer onClose={() => { setShowFullScreen(false); exitFullScreen() }} {...{ timer, timeRemaining, percentageComplete }} />
+                    <FullScreenTimer onClose={() => { setShowFullScreen(false); exitFullScreen() }} {...{ timer, timeRemaining, percentageComplete, setRefreshTime }} />
                 }
 
                 <ListItemWrapper className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"}>

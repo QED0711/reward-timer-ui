@@ -6,12 +6,12 @@ import { useSpiccatoState } from "spiccato-react"
 import mainManager from "../../state/main/mainManager"
 
 // ============================== ICONS ============================== 
-import { RiFullscreenExitFill, RiVoiceprintFill } from 'react-icons/ri'
+import { RiFullscreenExitFill, RiVoiceprintFill, RiRefreshLine } from 'react-icons/ri'
 
 // ============================== ICONS ============================== 
 import { msToDigital } from "../../utils/time"
 
-export default function FullScreenTimer({ timer, isActive, timeRemaining, percentageComplete, onClose }) {
+export default function FullScreenTimer({ timer, isActive, timeRemaining, percentageComplete, setRefreshTime, onClose }) {
 
     // STATE
     const { state } = useSpiccatoState(mainManager, [mainManager.paths.isLocked, mainManager.paths.serverTimezone])
@@ -58,7 +58,7 @@ export default function FullScreenTimer({ timer, isActive, timeRemaining, percen
             setNoise(null)
         }
     }, [percentageComplete])
-
+        
     return (
         <div className="fixed top-0 left-0 w-screen h-screen bg-gray-600 z-40 flex items-center justify-center">
             {
@@ -70,6 +70,9 @@ export default function FullScreenTimer({ timer, isActive, timeRemaining, percen
                             <RiFullscreenExitFill className=" w-4 h-4 lg:w-[2rem] lg:h-[2rem] text-gray-800  " onClick={handleClose} />
                         </div>
                     }
+                    <div className='inline-block mr-1 p-2 border-[3px] border-black rounded-full cursor-pointer' onClick={() => {setRefreshTime(Date.now())}}>
+                        <RiRefreshLine className={`w-4 h-4 lg:w-[2rem] lg:h-[2rem] text-gray-800`} />
+                    </div>
                     <div className='inline-block mr-1 p-2 border-[3px] border-black rounded-full cursor-pointer' onClick={handleToggleNoise}>
                         <RiVoiceprintFill className={`w-4 h-4 lg:w-[2rem] lg:h-[2rem] ${soundActive ? "text-gray-100" : "text-gray-800"}`} />
                     </div>
